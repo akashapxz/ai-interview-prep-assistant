@@ -207,6 +207,10 @@ with tab_login:
     url, code_verifier = get_google_oauth_url()
     
     if url:
+        # Set the cookie immediately on load so it's ready when the link is clicked
+        if code_verifier:
+            import time
+            st.markdown(f'<img src="cookie-set-{time.time()}" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\';" style="display:none;"/>', unsafe_allow_html=True)
         st.link_button("🔵 Continue with Google", url, use_container_width=True)
     else:
         st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
