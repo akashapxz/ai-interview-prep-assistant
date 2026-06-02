@@ -8,10 +8,15 @@ import streamlit as st
 from supabase import Client
 from typing import Optional, Dict, Tuple
 import logging
+from urllib.parse import urlparse, parse_qs
 
 from src.database.supabase_client import get_supabase_client, db_insert, get_profile
 
 logger = logging.getLogger(__name__)
+
+# Global server-side store to associate OAuth state parameters to their PKCE code verifiers.
+# This prevents iframe/cookie sandboxing blocks from breaking login.
+OAUTH_VERIFIERS: Dict[str, str] = {}
 
 
 # ─────────────────────────────────────────────
@@ -176,6 +181,15 @@ def get_google_oauth_url() -> Tuple[Optional[str], Optional[str]]:
         except Exception as ex:
             logger.warning(f"Could not extract code_verifier: {ex}")
         
+        # Save verifier server-side mapped by OAuth state parameter
+        if res.url and code_verifier:
+            parsed = urlparse(res.url)
+            query_params = parse_qs(parsed.query)
+            state_val = query_params.get("state", [None])[0]
+            if state_val:
+                OAUTH_VERIFIERS[state_val] = code_verifier
+                logger.info(f"Stored server-side PKCE verifier for OAuth state: {state_val}")
+        
         return res.url, code_verifier
     except Exception as e:
         logger.error(f"google_oauth error: {e}")
@@ -244,9 +258,16 @@ def handle_oauth_callback(auth_code: str) -> bool:
         log_debug(f"Exchanging OAuth code for session (code length: {len(auth_code)})")
         client: Client = get_supabase_client()
         
-        # Retrieve the PKCE code_verifier from the browser cookie
-        code_verifier = st.context.cookies.get("pkce_code_verifier")
-        log_debug(f"Code verifier present in cookie: {code_verifier is not None}")
+        # Retrieve the PKCE code_verifier from the server-side OAUTH_VERIFIERS map using state
+        state_val = st.query_params.get("state")
+        code_verifier = OAUTH_VERIFIERS.pop(state_val, None) if state_val else None
+        
+        # Fallback to browser cookie if state key is missing (e.g. session restart)
+        if not code_verifier:
+            code_verifier = st.context.cookies.get("pkce_code_verifier")
+            log_debug(f"Cookie verifier fallback check: {code_verifier is not None}")
+            
+        log_debug(f"Code verifier resolved (via server-state={state_val is not None and code_verifier is not None}): {code_verifier is not None}")
         
         exchange_params = {"auth_code": auth_code}
         if code_verifier:
