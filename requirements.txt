@@ -37,9 +37,6 @@ pandas==2.2.3
 numpy==1.26.4
 
 # Voice
-openai-whisper==20240930
-SpeechRecognition==3.11.0
-pydub==0.25.1
 gtts==2.5.3
 
 # PDF Generation
