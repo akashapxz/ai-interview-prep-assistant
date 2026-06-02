@@ -9,7 +9,7 @@ import streamlit as st
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from src.auth.supabase_auth import sign_in, sign_up, reset_password, get_google_oauth_url
+from src.auth.supabase_auth import sign_in, sign_up, reset_password
 from src.components.ui_components import inject_global_css
 
 # Inject global styles
@@ -202,18 +202,7 @@ with tab_login:
             else:
                 st.error(msg)
 
-    st.markdown("<div style='text-align:center;color:#475569;font-size:0.8rem;margin:0.9rem 0;'>— or continue with —</div>", unsafe_allow_html=True)
-    # Pre-generate the URL and PKCE code verifier on page load
-    url, code_verifier = get_google_oauth_url()
-    
-    if url:
-        # Set the cookie immediately on load so it's ready when the link is clicked
-        if code_verifier:
-            import time
-            st.markdown(f'<img src="cookie-set-{time.time()}" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\';" style="display:none;"/>', unsafe_allow_html=True)
-        st.link_button("🔵 Continue with Google", url, use_container_width=True)
-    else:
-        st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
+
 
 # ── SIGNUP ─────────────────────────────────────────────────────────────────
 with tab_signup:
