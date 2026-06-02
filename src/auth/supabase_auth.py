@@ -14,6 +14,11 @@ from src.database.supabase_client import get_supabase_client, db_insert, get_pro
 
 logger = logging.getLogger(__name__)
 
+# List to store the last 20 generated PKCE code verifiers server-side.
+# When the user returns from Google, we try to exchange the auth code with these verifiers.
+# This completely bypasses iframe sandboxing blocks and URL parameter stripping.
+RECENT_VERIFIERS = []
+
 
 # ─────────────────────────────────────────────
 # Session helpers
@@ -180,6 +185,12 @@ def get_google_oauth_url() -> Tuple[Optional[str], Optional[str]]:
         res_url = res.url
         # Inject the code_verifier into the redirect_to parameter inside Supabase's authorize URL
         if res_url and code_verifier:
+            # Add to our recent verifiers list
+            if code_verifier not in RECENT_VERIFIERS:
+                RECENT_VERIFIERS.append(code_verifier)
+                if len(RECENT_VERIFIERS) > 20:
+                    RECENT_VERIFIERS.pop(0)
+                    
             parsed_url = urlparse(res_url)
             query_params = parse_qs(parsed_url.query)
             
@@ -271,24 +282,54 @@ def handle_oauth_callback(auth_code: str) -> bool:
         log_debug(f"Exchanging OAuth code for session (code length: {len(auth_code)})")
         client: Client = get_supabase_client()
         
-        # Retrieve the PKCE code_verifier from the query parameters (passed back by redirect_to URL)
-        code_verifier = st.query_params.get("verifier")
-        log_debug(f"Code verifier from redirect query parameter: {code_verifier is not None}")
+        # Try all recently generated code verifiers in reverse order
+        success = False
+        res = None
         
-        # Fallback to browser cookie if parameter is missing
-        if not code_verifier:
-            code_verifier = st.context.cookies.get("pkce_code_verifier")
-            log_debug(f"Cookie verifier fallback check: {code_verifier is not None}")
+        # Build candidate verifier list: verifier from URL query param -> recent list -> cookie
+        candidate_verifiers = []
+        url_verifier = st.query_params.get("verifier")
+        if url_verifier:
+            candidate_verifiers.append(url_verifier)
             
-        log_debug(f"Code verifier resolved: {code_verifier is not None}")
-        
-        exchange_params = {"auth_code": auth_code}
-        if code_verifier:
-            exchange_params["code_verifier"] = code_verifier
+        # Add all recent server-side verifiers
+        for v in reversed(RECENT_VERIFIERS):
+            if v not in candidate_verifiers:
+                candidate_verifiers.append(v)
+                
+        # Add cookie verifier fallback
+        cookie_verifier = st.context.cookies.get("pkce_code_verifier")
+        if cookie_verifier and cookie_verifier not in candidate_verifiers:
+            candidate_verifiers.append(cookie_verifier)
             
-        log_debug(f"Calling exchange_code_for_session with parameters keys: {list(exchange_params.keys())}")
-        res = client.auth.exchange_code_for_session(exchange_params)
+        log_debug(f"Attempting OAuth code exchange using candidate verifiers list: {[v[:8] + '...' for v in candidate_verifiers]}")
         
+        for verifier in candidate_verifiers:
+            try:
+                log_debug(f"Trying verifier exchange for {verifier[:8]}...")
+                exchange_params = {
+                    "auth_code": auth_code,
+                    "code_verifier": verifier
+                }
+                res = client.auth.exchange_code_for_session(exchange_params)
+                if res.user and res.session:
+                    log_debug(f"Successfully exchanged code using verifier {verifier[:8]}...")
+                    # Clean up list
+                    try:
+                        RECENT_VERIFIERS.remove(verifier)
+                    except Exception:
+                        pass
+                    success = True
+                    break
+            except Exception as exchange_err:
+                log_debug(f"Verifier {verifier[:8]}... failed: {exchange_err}")
+                continue
+                
+        if not success:
+            log_debug("All verifiers failed to exchange auth code.")
+            st.error("Authentication failed: no valid verifier matched the auth challenge.")
+            return False
+            
         log_debug(f"Exchange response: user={res.user is not None}, session={res.session is not None}")
         
         if res.user and res.session:
