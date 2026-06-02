@@ -234,35 +234,39 @@ def restore_session_from_token(access_token: str, refresh_token: str) -> bool:
     return False
 
 
+def log_debug(msg: str) -> None:
+    if "auth_debug_logs" not in st.session_state:
+        st.session_state["auth_debug_logs"] = []
+    st.session_state["auth_debug_logs"].append(msg)
+    logger.info(msg)
+
+
 def handle_oauth_callback(auth_code: str) -> bool:
     """Handle PKCE OAuth callback — exchange the code for a session."""
     try:
-        logger.info(f"Exchanging OAuth code for session (code length: {len(auth_code)})")
+        log_debug(f"Exchanging OAuth code for session (code length: {len(auth_code)})")
         client: Client = get_supabase_client()
         
         # Retrieve the PKCE code_verifier from the state parameter or browser cookie
-        code_verifier = st.query_params.get("state") or st.context.cookies.get("pkce_code_verifier")
-        logger.info(f"Code verifier present: {code_verifier is not None}")
+        state_verifier = st.query_params.get("state")
+        cookie_verifier = st.context.cookies.get("pkce_code_verifier")
+        log_debug(f"Code verifiers: state={state_verifier is not None}, cookie={cookie_verifier is not None}")
         
+        code_verifier = state_verifier or cookie_verifier
         exchange_params = {"auth_code": auth_code}
         if code_verifier:
             exchange_params["code_verifier"] = code_verifier
             
+        log_debug(f"Calling exchange_code_for_session with parameters keys: {list(exchange_params.keys())}")
         res = client.auth.exchange_code_for_session(exchange_params)
         
-        # Clear the cookie
-        try:
-            st.markdown("""
-            <img src="x" onerror="
-                document.cookie = 'pkce_code_verifier=; path=/; max-age=0; SameSite=Lax';
-            " style="display:none;"/>
-            """, unsafe_allow_html=True)
-        except Exception:
-            pass
+        log_debug(f"Exchange response: user={res.user is not None}, session={res.session is not None}")
+        
         if res.user and res.session:
             profile = get_profile(res.user.id)
+            log_debug(f"Profile lookup for {res.user.id}: found={profile is not None}")
             if not profile:
-                logger.info(f"No profile found for user {res.user.id}. Creating default profile.")
+                log_debug(f"No profile found for user {res.user.id}. Creating default profile.")
                 user_meta = res.user.user_metadata or {}
                 full_name = user_meta.get("full_name") or user_meta.get("name") or "Google User"
                 try:
@@ -279,8 +283,9 @@ def handle_oauth_callback(auth_code: str) -> bool:
                         "branch": "General",
                     }).execute()
                     profile = get_profile(res.user.id)
+                    log_debug(f"Profile creation completed. Re-fetch: found={profile is not None}")
                 except Exception as ex:
-                    logger.error(f"Failed to create default profile: {ex}")
+                    log_debug(f"Failed to create default profile: {ex}")
 
             _store_session(
                 {
@@ -291,13 +296,13 @@ def handle_oauth_callback(auth_code: str) -> bool:
                 },
                 profile,
             )
-            logger.info(f"Successfully authenticated via Google: {res.user.email}")
+            log_debug(f"Successfully authenticated via Google: {res.user.email}")
             return True
         else:
-            logger.warning("exchange_code_for_session: user or session is None")
+            log_debug("exchange_code_for_session: user or session is None")
             st.error("Authentication failed: no user session returned.")
     except Exception as e:
-        logger.error(f"handle_oauth_callback error: {e}", exc_info=True)
+        log_debug(f"handle_oauth_callback error: {e}")
         st.error(f"Failed to complete Google sign-in: {e}")
     return False
 

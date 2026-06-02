@@ -16,13 +16,19 @@ from src.components.ui_components import inject_global_css
 inject_global_css()
 
 # Temporary Developer Debugger for OAuth/Session troubleshooting
-if st.checkbox("🛠️ Auth Debugger (Developer Mode)", value=False, key="auth_dev_debugger"):
+if st.checkbox("🛠️ Auth Debugger (Developer Mode)", value=True, key="auth_dev_debugger"):
     st.json({
         "authenticated": st.session_state.get("authenticated"),
         "user": st.session_state.get("user"),
         "query_params": dict(st.query_params),
         "cookies": dict(st.context.cookies)
     })
+    st.write("**Auth Flow Progress Logs:**")
+    logs = st.session_state.get("auth_debug_logs", [])
+    if not logs:
+        st.write("*No flow logs recorded yet. Click 'Continue with Google' to start.*")
+    for log_msg in logs:
+        st.write(f"- {log_msg}")
 
 
 def clean_html(html_str: str) -> str:
