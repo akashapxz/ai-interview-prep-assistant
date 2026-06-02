@@ -214,7 +214,19 @@ with tab_login:
     url, code_verifier = get_google_oauth_url()
     
     if url:
-        st.link_button("🔵 Continue with Google", url, use_container_width=True)
+        # Set the cookie immediately on load so it's ready when the button is clicked
+        if code_verifier:
+            import time
+            st.markdown(f'<img src="cookie-set-{time.time()}" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\';" style="display:none;"/>', unsafe_allow_html=True)
+
+        if st.button("🔵 Continue with Google", use_container_width=True, key="google_login_btn"):
+            st.session_state["oauth_redirect_url"] = url
+            st.rerun()
+            
+        if "oauth_redirect_url" in st.session_state:
+            redirect_url = st.session_state.pop("oauth_redirect_url")
+            st.markdown(f'<meta http-equiv="refresh" content="0;url={redirect_url}">', unsafe_allow_html=True)
+            st.info("🔄 Redirecting to Google...")
     else:
         st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
 
