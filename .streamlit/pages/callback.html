@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Authenticating...</title></head>
+<body>
+<p>Authenticating, please wait...</p>
+<script>
+// This page captures the #hash fragment from Supabase OAuth
+// and redirects to the Streamlit app with ?query parameters
+var hash = window.location.hash.substring(1);
+if (hash) {
+    window.location.href = window.location.origin + '/?'+ hash;
+} else {
+    // Check for ?code= (PKCE flow)
+    var params = window.location.search;
+    if (params) {
+        window.location.href = window.location.origin + '/' + params;
+    }
+}
+</script>
+</body>
+</html>
