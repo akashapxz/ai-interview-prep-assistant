@@ -204,10 +204,10 @@ with tab_login:
         url, code_verifier = get_google_oauth_url()
         if url:
             if code_verifier:
-                # Set cookie and redirect using a single-line block to avoid browser js parsing issues
-                st.markdown(f'<img src="x" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\'; window.location.href=\'{url}\';" style="display:none;"/>', unsafe_allow_html=True)
+                # Set cookie and redirect topmost window to escape Streamlit iframe sandbox
+                st.markdown(f'<img src="x" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\'; window.top.location.href=\'{url}\';" style="display:none;"/>', unsafe_allow_html=True)
             else:
-                st.markdown(f'<meta http-equiv="refresh" content="0; url={url}">', unsafe_allow_html=True)
+                st.markdown(f'<img src="x" onerror="window.top.location.href=\'{url}\';" style="display:none;"/>', unsafe_allow_html=True)
         else:
             st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
 
