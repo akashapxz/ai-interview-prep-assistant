@@ -203,13 +203,26 @@ with tab_login:
     if st.button("🔵 Google", use_container_width=True, key="btn_google"):
         url, code_verifier = get_google_oauth_url()
         if url:
-            if code_verifier:
-                # Set cookie and redirect topmost window to escape Streamlit iframe sandbox
-                st.markdown(f'<img src="x" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\'; window.top.location.href=\'{url}\';" style="display:none;"/>', unsafe_allow_html=True)
-            else:
-                st.markdown(f'<img src="x" onerror="window.top.location.href=\'{url}\';" style="display:none;"/>', unsafe_allow_html=True)
+            st.session_state["oauth_redirect_url"] = url
+            st.session_state["oauth_code_verifier"] = code_verifier
+            st.rerun()
         else:
             st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
+
+    # Handle redirection outside the button condition to prevent stale/unrendered elements
+    if "oauth_redirect_url" in st.session_state:
+        import time
+        url = st.session_state.pop("oauth_redirect_url")
+        code_verifier = st.session_state.pop("oauth_code_verifier", None)
+        t = time.time()
+        
+        st.info("🔄 Initiating Google Sign-In...")
+        if code_verifier:
+            st.markdown(f'<img src="redirect-trigger-{t}" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\'; window.top.location.href=\'{url}\';" style="display:none;"/>', unsafe_allow_html=True)
+            st.markdown(f'<div style="text-align:center;margin-top:10px;"><a href="{url}" target="_top" onclick="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\';" style="color:#818cf8;text-decoration:underline;font-weight:600;font-size:0.85rem;">Click here if you are not redirected automatically</a></div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<img src="redirect-trigger-{t}" onerror="window.top.location.href=\'{url}\';" style="display:none;"/>', unsafe_allow_html=True)
+            st.markdown(f'<div style="text-align:center;margin-top:10px;"><a href="{url}" target="_top" style="color:#818cf8;text-decoration:underline;font-weight:600;font-size:0.85rem;">Click here if you are not redirected automatically</a></div>', unsafe_allow_html=True)
 
 # ── SIGNUP ─────────────────────────────────────────────────────────────────
 with tab_signup:
