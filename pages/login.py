@@ -225,7 +225,11 @@ with tab_login:
             
         if "oauth_redirect_url" in st.session_state:
             redirect_url = st.session_state.pop("oauth_redirect_url")
-            st.markdown(f'<meta http-equiv="refresh" content="0;url={redirect_url}">', unsafe_allow_html=True)
+            st.components.v1.html(f"""
+                <script type="text/javascript">
+                    window.top.location.href = "{redirect_url}";
+                </script>
+            """, height=0)
             st.info("🔄 Redirecting to Google...")
     else:
         st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
