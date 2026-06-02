@@ -171,7 +171,15 @@ def get_google_oauth_url() -> Tuple[Optional[str], Optional[str]]:
                 code_verifier = client.auth._storage.get_item(f"{storage_key}-code-verifier")
         except Exception as ex:
             logger.warning(f"Could not extract code_verifier: {ex}")
-        return res.url, code_verifier
+        
+        # Append code_verifier as state parameter to ensure it is returned in callback query params
+        res_url = res.url
+        if res_url and code_verifier:
+            if "?" in res_url:
+                res_url = f"{res_url}&state={code_verifier}"
+            else:
+                res_url = f"{res_url}?state={code_verifier}"
+        return res_url, code_verifier
     except Exception as e:
         logger.error(f"google_oauth error: {e}")
         return None, None
@@ -232,9 +240,9 @@ def handle_oauth_callback(auth_code: str) -> bool:
         logger.info(f"Exchanging OAuth code for session (code length: {len(auth_code)})")
         client: Client = get_supabase_client()
         
-        # Retrieve the PKCE code_verifier from the browser cookie
-        code_verifier = st.context.cookies.get("pkce_code_verifier")
-        logger.info(f"Code verifier from cookie present: {code_verifier is not None}")
+        # Retrieve the PKCE code_verifier from the state parameter or browser cookie
+        code_verifier = st.query_params.get("state") or st.context.cookies.get("pkce_code_verifier")
+        logger.info(f"Code verifier present: {code_verifier is not None}")
         
         exchange_params = {"auth_code": auth_code}
         if code_verifier:
