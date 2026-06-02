@@ -12,7 +12,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from src.auth.supabase_auth import sign_in, sign_up, reset_password, get_google_oauth_url
 from src.components.ui_components import inject_global_css
 
+# Inject global styles
 inject_global_css()
+
+# Temporary Developer Debugger for OAuth/Session troubleshooting
+if st.checkbox("🛠️ Auth Debugger (Developer Mode)", value=False, key="auth_dev_debugger"):
+    st.json({
+        "authenticated": st.session_state.get("authenticated"),
+        "user": st.session_state.get("user"),
+        "query_params": dict(st.query_params),
+        "cookies": dict(st.context.cookies)
+    })
 
 
 def clean_html(html_str: str) -> str:
