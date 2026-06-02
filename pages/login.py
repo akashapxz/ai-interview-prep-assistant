@@ -15,20 +15,7 @@ from src.components.ui_components import inject_global_css
 # Inject global styles
 inject_global_css()
 
-# Temporary Developer Debugger for OAuth/Session troubleshooting
-if st.checkbox("🛠️ Auth Debugger (Developer Mode)", value=True, key="auth_dev_debugger"):
-    st.json({
-        "authenticated": st.session_state.get("authenticated"),
-        "user": st.session_state.get("user"),
-        "query_params": dict(st.query_params),
-        "cookies": dict(st.context.cookies)
-    })
-    st.write("**Auth Flow Progress Logs:**")
-    logs = st.session_state.get("auth_debug_logs", [])
-    if not logs:
-        st.write("*No flow logs recorded yet. Click 'Continue with Google' to start.*")
-    for log_msg in logs:
-        st.write(f"- {log_msg}")
+
 
 
 def clean_html(html_str: str) -> str:
@@ -220,23 +207,7 @@ with tab_login:
     url, code_verifier = get_google_oauth_url()
     
     if url:
-        # Set the cookie immediately on load so it's ready when the button is clicked
-        if code_verifier:
-            import time
-            st.markdown(f'<img src="cookie-set-{time.time()}" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\';" style="display:none;"/>', unsafe_allow_html=True)
-
-        if st.button("🔵 Continue with Google", use_container_width=True, key="google_login_btn"):
-            st.session_state["oauth_redirect_url"] = url
-            st.rerun()
-            
-        if "oauth_redirect_url" in st.session_state:
-            redirect_url = st.session_state.pop("oauth_redirect_url")
-            st.components.v1.html(f"""
-                <script type="text/javascript">
-                    window.top.location.href = "{redirect_url}";
-                </script>
-            """, height=0)
-            st.info("🔄 Redirecting to Google...")
+        st.link_button("🔵 Continue with Google", url, use_container_width=True)
     else:
         st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
 

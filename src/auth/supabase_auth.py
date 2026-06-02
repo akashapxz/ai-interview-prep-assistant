@@ -159,7 +159,11 @@ def get_google_oauth_url() -> Tuple[Optional[str], Optional[str]]:
     """Get Google OAuth redirect URL from Supabase along with the PKCE code verifier."""
     try:
         client: Client = get_supabase_client()
-        redirect = os.getenv("APP_URL", "http://localhost:8501")
+        # Force redirect to root URL to avoid /oauth2callback path-stripping bugs
+        redirect = "https://ai-interview-prep-assistant-7tkgmzv3b5gye6mjjk4c6v.streamlit.app"
+        if os.getenv("APP_ENV") == "development" or os.getenv("APP_URL", "").startswith("http://localhost"):
+            redirect = "http://localhost:8501"
+            
         res = client.auth.sign_in_with_oauth({
             "provider": "google",
             "options": {"redirect_to": redirect},
