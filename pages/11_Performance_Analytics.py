@@ -109,4 +109,4 @@ if interviews or coding_sessions:
             use_container_width=True
         )
 else:
-    empty_state("trending_up", "No Performance Data", "Complete a mock interview or coding session to populate analytics!", "Go to Mock Interview →")
+    empty_state("trending_up", "No Performance Data", "Complete a mock interview or coding session to populate analytics!", "Go to Mock Interview")

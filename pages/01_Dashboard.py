@@ -280,7 +280,7 @@ with left:
             </div>
             """, unsafe_allow_html=True)
     else:
-        empty_state("gps_fixed", "No interviews yet", "Start your first mock interview!", "Go to Mock Interview →")
+        empty_state("gps_fixed", "No interviews yet", "Start your first mock interview!", "Go to Mock Interview")
 
 with right:
     st.markdown("**Weak Areas to Focus**")
@@ -366,7 +366,7 @@ if achievements:
             </div>
             """, unsafe_allow_html=True)
 else:
-    empty_state("military_tech", "No achievements yet", "Complete interviews to earn badges and XP!", "Start practicing →")
+    empty_state("military_tech", "No achievements yet", "Complete interviews to earn badges and XP!", "Start practicing")
 
 
 # ─────────────────────────────────────────────
