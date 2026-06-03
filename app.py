@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 load_dotenv()
 
-from src.auth.supabase_auth import is_authenticated, get_current_user, get_current_profile, sign_out
+from src.auth.supabase_auth import is_authenticated, get_current_user, get_current_profile, sign_out, handle_oauth_callback, log_debug
 from src.components.ui_components import inject_global_css, render_sidebar_nav, render_ai_provider_selector
 
 # ── Main Page Config ──────────────────────────────────────────────────────────
@@ -74,6 +74,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+
+# ── Handle Google OAuth Callback (PKCE flow) ─────────────────────────────────
+# Supabase PKCE flow redirects back with ?code= as a query parameter.
+# We exchange the code for a full session server-side — no JavaScript needed.
+q_params = st.query_params
+if "error" in q_params:
+    err_title = q_params.get("error")
+    err_desc = q_params.get("error_description") or ""
+    log_debug(f"OAuth Error param detected: {err_title} - {err_desc}")
+    st.error(f"❌ Google Sign-In Error: {err_title} - {err_desc}")
+    st.query_params.clear()
+elif "code" in q_params:
+    auth_code = q_params.get("code")
+    if auth_code:
+        log_debug(f"OAuth Code param detected: {auth_code[:10]}...")
+        success = handle_oauth_callback(auth_code)
+        st.query_params.clear()
+        if success:
+            log_debug("OAuth exchange succeeded. Calling st.rerun()")
+            st.rerun()
+        else:
+            log_debug("OAuth exchange failed inside handle_oauth_callback.")
+            st.error("❌ Google authentication failed. Please try signing in again.")
+    else:
+        log_debug("OAuth Code parameter present but empty.")
+        st.query_params.clear()
 
 # ── Dynamic Route Handling ────────────────────────────────────────────────────
 if is_authenticated():
