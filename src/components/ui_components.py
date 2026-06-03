@@ -31,7 +31,7 @@ def inject_global_css():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-    :root {
+    .stApp {
         --primary: var(--primary-color, #6366f1);
         --primary-dark: var(--primary-color, #4f46e5);
         --primary-light: color-mix(in srgb, var(--primary) 75%, var(--text-color, #f1f5f9));
@@ -66,7 +66,7 @@ def inject_global_css():
         --score-track: color-mix(in srgb, var(--text-color, #ffffff) 6%, transparent);
     }
     * { box-sizing: border-box; }
-    html, body, [data-testid="stAppViewContainer"] {
+    [data-testid="stAppViewContainer"] {
         background: var(--bg-base) !important;
         font-family: 'Inter', sans-serif !important;
         color: var(--text-primary) !important;
