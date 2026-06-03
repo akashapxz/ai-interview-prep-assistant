@@ -27,7 +27,7 @@ user    = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("Settings & Profile", "Manage your account details and preferences", "⚙️")
+page_header("Settings & Profile", "Manage your account details and preferences", "settings")
 
 tab_profile, tab_goals, tab_account = st.tabs([
     "👤 Profile Details",
@@ -178,10 +178,10 @@ with tab_account:
     st.markdown("### Account Information")
 
     st.markdown(f"""
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+    <div style="background:var(--bg-card);border:1px solid var(--border);
          border-radius:14px;padding:1.25rem;margin-bottom:1.5rem;">
-        <div style="color:#94a3b8;font-size:0.8rem;margin-bottom:0.25rem;">Logged In As</div>
-        <div style="color:#f1f5f9;font-weight:600;font-size:1rem;">{user.get('email','')}</div>
+        <div style="color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.25rem;">Logged In As</div>
+        <div style="color:var(--text-primary);font-weight:600;font-size:1rem;">{user.get('email','')}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -200,6 +200,6 @@ with tab_account:
     streak = profile.get("streak_days", 0) if profile else 0
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown(kpi_card("⚡", "Total XP Points", f"{xp:,}", "earned through practice", "#6366f1"), unsafe_allow_html=True)
+        st.markdown(kpi_card("bolt", "Total XP Points", f"{xp:,}", "earned through practice", "#6366f1"), unsafe_allow_html=True)
     with c2:
-        st.markdown(kpi_card("🔥", "Current Streak", f"{streak} Days", "consecutive active days", "#f59e0b"), unsafe_allow_html=True)
+        st.markdown(kpi_card("local_fire_department", "Current Streak", f"{streak} Days", "consecutive active days", "#f59e0b"), unsafe_allow_html=True)

@@ -28,7 +28,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("Performance Analytics", "Detailed tracking and trend analysis of your preparation stats", "📈")
+page_header("Performance Analytics", "Detailed tracking and trend analysis of your preparation stats", "trending_up")
 
 # ── Data Fetching ─────────────────────────────────────────────────────────────
 interviews = db_select("interviews", {"user_id": user_id, "status": "completed"}, order="created_at.desc")
@@ -48,13 +48,13 @@ if interviews or coding_sessions:
     st.markdown("### 📊 Performance Summary")
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        st.markdown(kpi_card("🎯", "Overall Average", f"{avg_score:.1f}%", f"across {total_ivs} interviews", "#6366f1"), unsafe_allow_html=True)
+        st.markdown(kpi_card("gps_fixed", "Overall Average", f"{avg_score:.1f}%", f"across {total_ivs} interviews", "#6366f1"), unsafe_allow_html=True)
     with c2:
-        st.markdown(kpi_card("💻", "Technical Average", f"{avg_tech:.1f}%", "domain specific", "#06b6d4"), unsafe_allow_html=True)
+        st.markdown(kpi_card("terminal", "Technical Average", f"{avg_tech:.1f}%", "domain specific", "#06b6d4"), unsafe_allow_html=True)
     with c3:
-        st.markdown(kpi_card("🤝", "HR Average", f"{avg_hr:.1f}%", "behavioral fit", "#8b5cf6"), unsafe_allow_html=True)
+        st.markdown(kpi_card("handshake", "HR Average", f"{avg_hr:.1f}%", "behavioral fit", "#8b5cf6"), unsafe_allow_html=True)
     with c4:
-        st.markdown(kpi_card("💡", "Coding Problems", f"{solved_coding}", f"out of {len(coding_sessions)} attempted", "#22c55e"), unsafe_allow_html=True)
+        st.markdown(kpi_card("lightbulb", "Coding Problems", f"{solved_coding}", f"out of {len(coding_sessions)} attempted", "#22c55e"), unsafe_allow_html=True)
     
     # ── Charts ────────────────────────────────────────────────────────────────
     st.markdown("### 📉 Analysis Charts")
@@ -109,4 +109,4 @@ if interviews or coding_sessions:
             use_container_width=True
         )
 else:
-    empty_state("📈", "No Performance Data", "Complete a mock interview or coding session to populate analytics!", "Go to Mock Interview →")
+    empty_state("trending_up", "No Performance Data", "Complete a mock interview or coding session to populate analytics!", "Go to Mock Interview →")

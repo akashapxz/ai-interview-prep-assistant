@@ -27,7 +27,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("Personalized Learning Engine", "AI-generated weekly roadmap and daily challenges to target your weak areas", "🗺️")
+page_header("Personalized Learning Engine", "AI-generated weekly roadmap and daily challenges to target your weak areas", "map")
 
 # ── Fetch Past Data to Feed AI Roadmap ──────────────────────────────────────────
 performance = get_performance_history(user_id, days=30)
@@ -122,7 +122,7 @@ if roadmap_data:
     
     col_ov1, col_ov2 = st.columns([1, 2])
     with col_ov1:
-        st.markdown(kpi_card("🎯", "Estimated Readiness Index", f"{r_score}%", "based on roadmap", color), unsafe_allow_html=True)
+        st.markdown(kpi_card("gps_fixed", "Estimated Readiness Index", f"{r_score}%", "based on roadmap", color), unsafe_allow_html=True)
     with col_ov2:
         st.markdown("**Priority Focus Areas:**")
         p_areas = roadmap_data.get("focus_topics", [])
@@ -141,7 +141,7 @@ if roadmap_data:
                 st.markdown(f"""
                 <div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:1rem;margin-bottom:0.5rem;">
                     <div style="color:#818cf8;font-weight:700;font-size:0.9rem;margin-bottom:0.5rem;">⚡ Objective & Weekly Goals</div>
-                    <div style="color:#e2e8f0;font-size:0.9rem;line-height:1.6;margin-bottom:0.8rem;">{week.get('expected_improvement', '')}</div>
+                    <div style="color:var(--text-primary);font-size:0.9rem;line-height:1.6;margin-bottom:0.8rem;">{week.get('expected_improvement', '')}</div>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -169,11 +169,11 @@ if roadmap_data:
         st.markdown("### 🏆 Recommended Practice Habits")
         for i, habit in enumerate(habits, 1):
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+            <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);
                  border-radius:10px;padding:0.75rem 1rem;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.75rem;">
                 <span style="color:#6366f1;font-weight:800;font-size:1.1rem;">0{i}</span>
-                <span style="color:#e2e8f0;font-size:0.9rem;">{habit}</span>
+                <span style="color:var(--text-primary);font-size:0.9rem;">{habit}</span>
             </div>
             """, unsafe_allow_html=True)
 else:
-    empty_state("🗺️", "No Roadmap Active", "Click generate above to create your personalized weekly learning plan!", "← We will analyze your weaknesses and create an adaptive schedule")
+    empty_state("map", "No Roadmap Active", "Click generate above to create your personalized weekly learning plan!", "← We will analyze your weaknesses and create an adaptive schedule")

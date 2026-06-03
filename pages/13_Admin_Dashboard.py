@@ -37,7 +37,7 @@ if not is_admin:
     <div style="text-align:center;padding:5rem 2rem;animation:fadeInUp 0.5s ease;">
         <div style="font-size:4rem;margin-bottom:1rem;">🚫</div>
         <h2 style="color:#ef4444;font-weight:800;margin-bottom:0.5rem;">Access Denied</h2>
-        <p style="color:#94a3b8;max-width:420px;margin:0 auto 1.5rem;">
+        <p style="color:var(--text-secondary);max-width:420px;margin:0 auto 1.5rem;">
             You do not have administrator permissions to view this page.
             Contact your system administrator or update your role in Supabase.
         </p>
@@ -46,7 +46,7 @@ if not is_admin:
     st.stop()
 
 # ── Page Header ───────────────────────────────────────────────────────────────
-page_header("Admin Dashboard", "Full backend visibility — users, interviews, logs, documents & system settings", "🛡️")
+page_header("Admin Dashboard", "Full backend visibility — users, interviews, logs, documents & system settings", "admin_panel_settings")
 
 # ── Fetch summary stats ───────────────────────────────────────────────────────
 @st.cache_data(ttl=30)
@@ -77,11 +77,11 @@ profiles, interviews, coding, logs, docs, challenges = load_admin_stats()
 # ── KPI Row ───────────────────────────────────────────────────────────────────
 kc = st.columns(5)
 kpis = [
-    (kc[0], "👥", "Total Users",      str(len(profiles)),   "registered",      "#6366f1"),
-    (kc[1], "🎯", "Interviews",        str(len(interviews)), "all time",        "#06b6d4"),
-    (kc[2], "💻", "Coding Sessions",   str(len(coding)),     "submitted",       "#8b5cf6"),
-    (kc[3], "📄", "Documents",         str(len(docs)),       "uploaded",        "#22c55e"),
-    (kc[4], "📋", "Audit Events",      str(len(logs)),       "logged",          "#f59e0b"),
+    (kc[0], "groups", "Total Users",      str(len(profiles)),   "registered",      "#6366f1"),
+    (kc[1], "gps_fixed", "Interviews",        str(len(interviews)), "all time",        "#06b6d4"),
+    (kc[2], "terminal", "Coding Sessions",   str(len(coding)),     "submitted",       "#8b5cf6"),
+    (kc[3], "description", "Documents",         str(len(docs)),       "uploaded",        "#22c55e"),
+    (kc[4], "assignment", "Audit Events",      str(len(logs)),       "logged",          "#f59e0b"),
 ]
 for col, icon, title, val, sub, color in kpis:
     with col:
@@ -203,16 +203,16 @@ with tabs[1]:
             created = iv.get("created_at", "")[:16].replace("T", " ")
             color   = "#22c55e" if score >= 80 else "#f59e0b" if score >= 60 else "#ef4444"
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+            <div style="background:var(--bg-card);border:1px solid var(--border);
                  border-radius:10px;padding:0.65rem 1rem;margin-bottom:0.35rem;
                  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.4rem;">
                 <div>
-                    <span style="color:#f1f5f9;font-weight:600;font-size:0.88rem;">{iv_type}</span>
-                    <span style="color:#64748b;font-size:0.78rem;margin-left:0.5rem;">{domain} · {persona}</span>
+                    <span style="color:var(--text-primary);font-weight:600;font-size:0.88rem;">{iv_type}</span>
+                    <span style="color:var(--text-muted);font-size:0.78rem;margin-left:0.5rem;">{domain} · {persona}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:1rem;">
                     <span style="color:{color};font-weight:700;">{score:.0f}/100</span>
-                    <span style="color:#64748b;font-size:0.78rem;">{created}</span>
+                    <span style="color:var(--text-muted);font-size:0.78rem;">{created}</span>
                     <span style="background:rgba(99,102,241,0.1);border-radius:6px;padding:0.2rem 0.5rem;
                           color:#818cf8;font-size:0.75rem;">{status}</span>
                 </div>
@@ -245,17 +245,17 @@ with tabs[2]:
             created  = c.get("created_at", "")[:16].replace("T", " ")
             color    = "#22c55e" if status == "solved" else "#ef4444"
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+            <div style="background:var(--bg-card);border:1px solid var(--border);
                  border-radius:10px;padding:0.65rem 1rem;margin-bottom:0.35rem;
                  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.4rem;">
                 <div>
-                    <span style="color:#f1f5f9;font-weight:600;font-size:0.88rem;">{topic}</span>
-                    <span style="color:#64748b;font-size:0.78rem;margin-left:0.5rem;">{lang} · {diff}</span>
+                    <span style="color:var(--text-primary);font-weight:600;font-size:0.88rem;">{topic}</span>
+                    <span style="color:var(--text-muted);font-size:0.78rem;margin-left:0.5rem;">{lang} · {diff}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:1rem;">
                     <span style="color:{color};font-weight:700;">{status}</span>
                     <span style="color:#818cf8;">{score}/100</span>
-                    <span style="color:#64748b;font-size:0.78rem;">{created}</span>
+                    <span style="color:var(--text-muted);font-size:0.78rem;">{created}</span>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -284,10 +284,10 @@ with tabs[3]:
             dc1, dc2 = st.columns([5, 1])
             with dc1:
                 st.markdown(f"""
-                <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+                <div style="background:var(--bg-card);border:1px solid var(--border);
                      border-radius:10px;padding:0.65rem 1rem;">
-                    <div style="color:#f1f5f9;font-size:0.88rem;font-weight:600;">📄 {name}</div>
-                    <div style="color:#64748b;font-size:0.78rem;margin-top:0.2rem;">{doc_type} · {size_kb} KB · {created}</div>
+                    <div style="color:var(--text-primary);font-size:0.88rem;font-weight:600;">📄 {name}</div>
+                    <div style="color:var(--text-muted);font-size:0.78rem;margin-top:0.2rem;">{doc_type} · {size_kb} KB · {created}</div>
                 </div>
                 """, unsafe_allow_html=True)
             with dc2:
@@ -316,9 +316,21 @@ with tabs[4]:
         if st.button("✅ Save Challenge", key="admin_save_ch", type="primary"):
             if ch_q.strip():
                 from src.database.supabase_client import db_insert
+                # Map human readable categories to challenge_type enum check constraint values ('technical','hr','coding')
+                cat_to_type = {
+                    "DSA": "coding",
+                    "System Design": "technical",
+                    "HR": "hr",
+                    "Behavioral": "hr",
+                    "Coding": "coding",
+                    "General": "technical"
+                }
+                ch_type = cat_to_type.get(ch_cat, "technical")
+                
                 res = db_insert("daily_challenges", {
                     "challenge_date": str(ch_date),
-                    "category": ch_cat,
+                    "challenge_type": ch_type,
+                    "domain": ch_cat,
                     "difficulty": ch_diff,
                     "question": ch_q.strip(),
                 })
@@ -335,7 +347,7 @@ with tabs[4]:
     for ch in challenges:
         ch_id  = ch.get("id", "")
         ch_d   = ch.get("challenge_date", "—")
-        ch_cat = ch.get("category", "—")
+        ch_cat = ch.get("domain", ch.get("challenge_type", "—"))
         ch_diff= ch.get("difficulty", "—")
         ch_q   = ch.get("question", "—")[:120]
 
@@ -343,19 +355,19 @@ with tabs[4]:
         with chc1:
             diff_color = "#22c55e" if ch_diff == "easy" else "#f59e0b" if ch_diff == "medium" else "#ef4444"
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+            <div style="background:var(--bg-card);border:1px solid var(--border);
                  border-radius:10px;padding:0.65rem 1rem;margin-bottom:0.35rem;">
                 <div style="display:flex;gap:0.75rem;align-items:center;margin-bottom:0.3rem;">
                     <span style="color:#818cf8;font-size:0.8rem;font-weight:700;">{ch_d}</span>
                     <span style="background:{diff_color}22;color:{diff_color};border-radius:6px;padding:0.15rem 0.5rem;font-size:0.72rem;font-weight:600;">{ch_diff.upper()}</span>
-                    <span style="color:#64748b;font-size:0.78rem;">{ch_cat}</span>
+                    <span style="color:var(--text-muted);font-size:0.78rem;">{ch_cat}</span>
                 </div>
-                <div style="color:#e2e8f0;font-size:0.88rem;">{ch_q}{'...' if len(ch.get('question','')) > 120 else ''}</div>
+                <div style="color:var(--text-primary);font-size:0.88rem;">{ch_q}{'...' if len(ch.get('question','')) > 120 else ''}</div>
             </div>
             """, unsafe_allow_html=True)
         with chc2:
             st.markdown("<div style='height:0.8rem'></div>", unsafe_allow_html=True)
-            if st.button("🗑️", key=f"del_ch_{ch_id}"):
+            if st.button("delete", key=f"del_ch_{ch_id}"):
                 db_delete("daily_challenges", {"id": ch_id})
                 st.success("Challenge deleted.")
                 st.cache_data.clear()
@@ -387,15 +399,15 @@ with tabs[5]:
         }
         ac = action_colors.get(action.lower(), "#818cf8")
         st.markdown(f"""
-        <div style="background:rgba(255,255,255,0.03);border-left:3px solid {ac};
+        <div style="background:var(--bg-card);border-left:3px solid {ac};
              border-radius:0 8px 8px 0;padding:0.45rem 1rem;margin-bottom:0.3rem;
              display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;">
-            <span style="color:#e2e8f0;">
+            <span style="color:var(--text-primary);">
                 <span style="color:{ac};font-weight:700;">{action.upper()}</span>
                 &nbsp;·&nbsp;{resource}
-                {f"&nbsp;<code style='color:#64748b;font-size:0.75rem;'>{res_id[:12]}…</code>" if res_id else ""}
+                {f"&nbsp;<code style='color:var(--text-muted);font-size:0.75rem;'>{res_id[:12]}…</code>" if res_id else ""}
             </span>
-            <span style="color:#64748b;white-space:nowrap;">{created}</span>
+            <span style="color:var(--text-muted);white-space:nowrap;">{created}</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -419,7 +431,7 @@ with tabs[6]:
         <div style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);
              border-radius:12px;padding:1rem;">
             <div style="color:#22d3ee;font-weight:700;margin-bottom:0.5rem;">🟢 System Status</div>
-            <div style="color:#94a3b8;font-size:0.85rem;line-height:1.8;">
+            <div style="color:var(--text-secondary);font-size:0.85rem;line-height:1.8;">
                 ✅ Database: Supabase Cloud (Active)<br>
                 ✅ Auth: Supabase Auth (Active)<br>
                 ✅ Storage: Supabase Storage (Active)<br>
@@ -448,4 +460,4 @@ with tabs[6]:
                 except Exception as e:
                     st.error(f"Error: {e}")
     with col_d2:
-        st.markdown("<p style='color:#64748b;font-size:0.85rem;'>More danger zone actions can be added here for full system management.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:var(--text-muted);font-size:0.85rem;'>More danger zone actions can be added here for full system management.</p>", unsafe_allow_html=True)

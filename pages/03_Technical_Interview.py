@@ -27,7 +27,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("Technical Interview Prep", "Practice domain-specific technical questions with AI evaluation", "💻")
+page_header("Technical Interview Prep", "Practice domain-specific technical questions with AI evaluation", "terminal")
 
 # ── Settings ──────────────────────────────────────────────────────────────────
 st.markdown("### ⚙️ Configure Practice Session")
@@ -46,7 +46,7 @@ latest_resume = db_select("resumes", {"user_id": user_id}, order="created_at.des
 skills_str = ""
 if latest_resume and latest_resume[0].get("skills"):
     skills_str = ", ".join(latest_resume[0]["skills"][:10])
-    st.markdown(f'<div style="color:#64748b;font-size:0.85rem;">📄 Using skills from your resume: <span style="color:#818cf8;">{skills_str[:80]}...</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:var(--text-muted);font-size:0.85rem;">📄 Using skills from your resume: <span style="color:#818cf8;">{skills_str[:80]}...</span></div>', unsafe_allow_html=True)
 
 gen_btn = st.button("🚀 Generate Questions", type="primary", use_container_width=False, key="gen_tech_btn")
 
@@ -77,7 +77,7 @@ if questions:
 
         st.markdown(f"""
         <div style="
-            background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+            background:var(--bg-card);border:1px solid var(--border);
             border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:0.5rem;
         ">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
@@ -85,7 +85,7 @@ if questions:
                 {difficulty_badge(q.get('difficulty', difficulty))}
                 {badge(q.get('domain', domain), '#06b6d4')}
             </div>
-            <div style="color:#f1f5f9;font-size:0.95rem;line-height:1.65;">{q_text}</div>
+            <div style="color:var(--text-primary);font-size:0.95rem;line-height:1.65;">{q_text}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -149,15 +149,15 @@ if questions:
         <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);
              border-radius:14px;padding:1.5rem;text-align:center;">
             <div style="font-size:2.5rem;">{emoji}</div>
-            <div style="font-size:2rem;font-weight:800;color:#6366f1;">{avg:.1f}<span style="font-size:1rem;color:#94a3b8;">/100</span></div>
-            <div style="color:#94a3b8;">Average Score across {len(evaluations)} evaluated questions</div>
+            <div style="font-size:2rem;font-weight:800;color:#6366f1;">{avg:.1f}<span style="font-size:1rem;color:var(--text-secondary);">/100</span></div>
+            <div style="color:var(--text-secondary);">Average Score across {len(evaluations)} evaluated questions</div>
         </div>
         """, unsafe_allow_html=True)
 
 else:
     if not gen_btn:
         st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
-        empty_state("💻", "Ready to Practice", "Configure your session above and click Generate Questions to start!", "← Set your domain, difficulty, and question type")
+        empty_state("terminal", "Ready to Practice", "Configure your session above and click Generate Questions to start!", "← Set your domain, difficulty, and question type")
 
 # ── History Tab ───────────────────────────────────────────────────────────────
 st.markdown("---")
@@ -171,9 +171,9 @@ with st.expander("📚 View Past Technical Practice Sessions"):
                 score = r.get("score", 0)
                 color = "#22c55e" if score >= 80 else "#f59e0b" if score >= 60 else "#ef4444"
                 st.markdown(f"""
-                <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:0.6rem;margin-bottom:0.3rem;
+                <div style="background:var(--bg-card);border-radius:8px;padding:0.6rem;margin-bottom:0.3rem;
                      display:flex;justify-content:space-between;align-items:center;">
-                    <span style="color:#e2e8f0;font-size:0.85rem;">{q_text}...</span>
+                    <span style="color:var(--text-primary);font-size:0.85rem;">{q_text}...</span>
                     <span style="color:{color};font-weight:700;">{score:.0f}/100</span>
                 </div>
                 """, unsafe_allow_html=True)

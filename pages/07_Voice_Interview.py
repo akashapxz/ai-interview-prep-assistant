@@ -25,7 +25,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("Voice Interview Mode", "Practice speaking your answers aloud — AI analyzes your communication quality", "🎙️")
+page_header("Voice Interview Mode", "Practice speaking your answers aloud — AI analyzes your communication quality", "mic")
 
 # ── Browser Speech Recognition JS ────────────────────────────────────────────
 st.markdown("""
@@ -33,20 +33,20 @@ st.markdown("""
      border-radius:14px;padding:1.25rem;margin-bottom:1.5rem;">
     <div style="color:#818cf8;font-weight:700;margin-bottom:0.5rem;">🎙️ How Voice Interview Works</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;">
-        <div style="text-align:center;"><div style="font-size:1.5rem;">📋</div><div style="color:#e2e8f0;font-size:0.85rem;margin-top:0.3rem;">AI generates question</div></div>
-        <div style="text-align:center;"><div style="font-size:1.5rem;">🎙️</div><div style="color:#e2e8f0;font-size:0.85rem;margin-top:0.3rem;">Click mic & speak</div></div>
-        <div style="text-align:center;"><div style="font-size:1.5rem;">📝</div><div style="color:#e2e8f0;font-size:0.85rem;margin-top:0.3rem;">Speech converted to text</div></div>
-        <div style="text-align:center;"><div style="font-size:1.5rem;">📊</div><div style="color:#e2e8f0;font-size:0.85rem;margin-top:0.3rem;">AI analyzes speech quality</div></div>
+        <div style="text-align:center;"><div style="font-size:1.5rem;">📋</div><div style="color:var(--text-primary);font-size:0.85rem;margin-top:0.3rem;">AI generates question</div></div>
+        <div style="text-align:center;"><div style="font-size:1.5rem;">🎙️</div><div style="color:var(--text-primary);font-size:0.85rem;margin-top:0.3rem;">Click mic & speak</div></div>
+        <div style="text-align:center;"><div style="font-size:1.5rem;">📝</div><div style="color:var(--text-primary);font-size:0.85rem;margin-top:0.3rem;">Speech converted to text</div></div>
+        <div style="text-align:center;"><div style="font-size:1.5rem;">📊</div><div style="color:var(--text-primary);font-size:0.85rem;margin-top:0.3rem;">AI analyzes speech quality</div></div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # Speech Recognition JavaScript component
 voice_js = """
-<div id="voice-panel" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+<div id="voice-panel" style="background:var(--bg-card);border:1px solid var(--border);
      border-radius:16px;padding:1.5rem;text-align:center;">
 
-    <div id="status-text" style="color:#64748b;font-size:0.85rem;margin-bottom:1rem;">
+    <div id="status-text" style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">
         Click the microphone to start recording
     </div>
 
@@ -64,10 +64,10 @@ voice_js = """
     <div id="transcript-box" style="
         margin-top:1rem;padding:1rem;
         background:rgba(0,0,0,0.3);border-radius:10px;
-        color:#e2e8f0;min-height:80px;font-size:0.9rem;line-height:1.6;
+        color:var(--text-primary);min-height:80px;font-size:0.9rem;line-height:1.6;
         text-align:left;display:none;
     ">
-        <div style="color:#64748b;font-size:0.75rem;margin-bottom:0.3rem;">TRANSCRIPT</div>
+        <div style="color:var(--text-muted);font-size:0.75rem;margin-bottom:0.3rem;">TRANSCRIPT</div>
         <div id="transcript-text"></div>
     </div>
 
@@ -126,15 +126,15 @@ function startRecording() {
         }
         fullTranscript += final;
         document.getElementById('transcript-text').innerHTML =
-            '<span style="color:#f1f5f9;">' + fullTranscript + '</span>' +
-            '<span style="color:#64748b;">' + interim + '</span>';
+            '<span style="color:var(--text-primary);">' + fullTranscript + '</span>' +
+            '<span style="color:var(--text-muted);">' + interim + '</span>';
         document.getElementById('copy-section').style.display = 'block';
     };
 
     recognition.onend = function() {
         isRecording = false;
         document.getElementById('mic-btn').style.background = 'linear-gradient(135deg,#6366f1,#8b5cf6)';
-        document.getElementById('mic-btn').innerHTML = '🎙️';
+        document.getElementById('mic-btn').innerHTML = 'mic';
         document.getElementById('status-text').innerHTML = 'Recording stopped. <a onclick="startRecording()" style="color:#6366f1;cursor:pointer;">Record again</a>';
         document.getElementById('recording-indicator').style.display = 'none';
     };
@@ -207,8 +207,8 @@ if voice_questions and current_q < len(voice_questions):
             <span style="background:#6366f1;color:#fff;border-radius:6px;padding:0.2rem 0.6rem;font-size:0.75rem;font-weight:700;">Q{current_q+1}/{len(voice_questions)}</span>
             {badge(voice_type, '#8b5cf6')}
         </div>
-        <div style="color:#f1f5f9;font-size:1rem;line-height:1.65;">{q_text}</div>
-        <div style="color:#64748b;font-size:0.8rem;margin-top:0.5rem;">💡 Speak your answer clearly and confidently</div>
+        <div style="color:var(--text-primary);font-size:1rem;line-height:1.65;">{q_text}</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;margin-top:0.5rem;">💡 Speak your answer clearly and confidently</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -318,7 +318,7 @@ if voice_questions and current_q < len(voice_questions):
         st.markdown(f'<div style="color:{speed_color};font-size:0.85rem;margin-bottom:1rem;">Speaking Speed: {analysis.get("speaking_speed_wpm",0):.0f} WPM — {speed_assess.replace("_"," ").upper()}</div>', unsafe_allow_html=True)
 
         if analysis.get("detailed_feedback"):
-            st.markdown(f'<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:0.75rem;color:#e2e8f0;margin-top:0.5rem;margin-bottom:1rem;">{analysis["detailed_feedback"]}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="background:var(--bg-card);border-radius:10px;padding:0.75rem;color:var(--text-primary);margin-top:0.5rem;margin-bottom:1rem;">{analysis["detailed_feedback"]}</div>', unsafe_allow_html=True)
             
             # Speak feedback aloud via TTS (limit to first two sentences)
             try:
@@ -357,11 +357,11 @@ elif voice_questions and current_q >= len(voice_questions):
         <div style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(6,182,212,0.1));
              border:1px solid rgba(99,102,241,0.3);border-radius:20px;padding:2rem;text-align:center;margin:1rem 0;">
             <div style="font-size:3rem;">🎙️</div>
-            <h2 style="color:#f1f5f9;">Voice Session Complete!</h2>
+            <h2 style="color:var(--text-primary);">Voice Session Complete!</h2>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem;">
-                <div><div style="color:#6366f1;font-size:1.8rem;font-weight:800;">{avg_conf:.0f}</div><div style="color:#94a3b8;font-size:0.85rem;">Confidence</div></div>
-                <div><div style="color:#8b5cf6;font-size:1.8rem;font-weight:800;">{avg_comm:.0f}</div><div style="color:#94a3b8;font-size:0.85rem;">Communication</div></div>
-                <div><div style="color:#06b6d4;font-size:1.8rem;font-weight:800;">{avg_clarity:.0f}</div><div style="color:#94a3b8;font-size:0.85rem;">Clarity</div></div>
+                <div><div style="color:#6366f1;font-size:1.8rem;font-weight:800;">{avg_conf:.0f}</div><div style="color:var(--text-secondary);font-size:0.85rem;">Confidence</div></div>
+                <div><div style="color:#8b5cf6;font-size:1.8rem;font-weight:800;">{avg_comm:.0f}</div><div style="color:var(--text-secondary);font-size:0.85rem;">Communication</div></div>
+                <div><div style="color:#06b6d4;font-size:1.8rem;font-weight:800;">{avg_clarity:.0f}</div><div style="color:var(--text-secondary);font-size:0.85rem;">Clarity</div></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -372,7 +372,7 @@ elif voice_questions and current_q >= len(voice_questions):
                 st.session_state.pop(k, None)
             st.rerun()
     else:
-        empty_state("🎙️", "Session Complete", "No answers were recorded. Try again!")
+        empty_state("mic", "Session Complete", "No answers were recorded. Try again!")
 
 elif not voice_questions:
-    empty_state("🎙️", "Ready for Voice Interview", "Generate questions above and practice speaking your answers!", "← Select question type and count")
+    empty_state("mic", "Ready for Voice Interview", "Generate questions above and practice speaking your answers!", "← Select question type and count")

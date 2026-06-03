@@ -26,7 +26,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("AI Career Coach", "Real-time advice, placement roadmap tips, and career guidance", "💬")
+page_header("AI Career Coach", "Real-time advice, placement roadmap tips, and career guidance", "forum")
 
 # Initialize Chat Session
 if "coach_session_id" not in st.session_state:
@@ -46,7 +46,7 @@ for msg in chat_history:
         <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;">
             <div style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.25);
                  border-radius:16px 16px 4px 16px;padding:0.75rem 1rem;max-width:70%;">
-                <div style="color:#f1f5f9;line-height:1.6;">{content}</div>
+                <div style="color:var(--text-primary);line-height:1.6;">{content}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -55,10 +55,10 @@ for msg in chat_history:
         <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;">
             <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#06b6d4);
                  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">💬</div>
-            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+            <div style="background:var(--bg-card);border:1px solid var(--border);
                  border-radius:4px 16px 16px 16px;padding:0.75rem 1rem;flex:1;">
                 <div style="color:#a78bfa;font-size:0.72rem;font-weight:600;margin-bottom:0.3rem;">CAREER COACH</div>
-                <div style="color:#e2e8f0;line-height:1.65;">{content}</div>
+                <div style="color:var(--text-primary);line-height:1.65;">{content}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)

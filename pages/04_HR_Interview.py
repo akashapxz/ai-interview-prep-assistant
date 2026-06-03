@@ -26,7 +26,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("HR Interview Prep", "Master behavioral questions with STAR method coaching and AI feedback", "🤝")
+page_header("HR Interview Prep", "Master behavioral questions with STAR method coaching and AI feedback", "handshake")
 
 # STAR Method info banner
 st.markdown("""
@@ -37,10 +37,10 @@ st.markdown("""
         <span style="color:#818cf8;font-weight:700;">STAR Method Guide</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
-        <div><span style="color:#6366f1;font-weight:700;">S</span><span style="color:#e2e8f0;"> — Situation</span><br><span style="color:#64748b;font-size:0.8rem;">Set the scene and context</span></div>
-        <div><span style="color:#8b5cf6;font-weight:700;">T</span><span style="color:#e2e8f0;"> — Task</span><br><span style="color:#64748b;font-size:0.8rem;">Describe your responsibility</span></div>
-        <div><span style="color:#06b6d4;font-weight:700;">A</span><span style="color:#e2e8f0;"> — Action</span><br><span style="color:#64748b;font-size:0.8rem;">Explain steps you took</span></div>
-        <div><span style="color:#22c55e;font-weight:700;">R</span><span style="color:#e2e8f0;"> — Result</span><br><span style="color:#64748b;font-size:0.8rem;">Share the outcome/impact</span></div>
+        <div><span style="color:#6366f1;font-weight:700;">S</span><span style="color:var(--text-primary);"> — Situation</span><br><span style="color:var(--text-muted);font-size:0.8rem;">Set the scene and context</span></div>
+        <div><span style="color:#8b5cf6;font-weight:700;">T</span><span style="color:var(--text-primary);"> — Task</span><br><span style="color:var(--text-muted);font-size:0.8rem;">Describe your responsibility</span></div>
+        <div><span style="color:#06b6d4;font-weight:700;">A</span><span style="color:var(--text-primary);"> — Action</span><br><span style="color:var(--text-muted);font-size:0.8rem;">Explain steps you took</span></div>
+        <div><span style="color:#22c55e;font-weight:700;">R</span><span style="color:var(--text-primary);"> — Result</span><br><span style="color:var(--text-muted);font-size:0.8rem;">Share the outcome/impact</span></div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -92,14 +92,14 @@ if questions:
 
         # Question card
         st.markdown(f"""
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+        <div style="background:var(--bg-card);border:1px solid var(--border);
              border-radius:14px;padding:1.25rem;margin-bottom:0.5rem;">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
                 <span style="background:#8b5cf6;color:#fff;border-radius:8px;padding:0.2rem 0.6rem;font-size:0.75rem;font-weight:700;">Q{i+1}</span>
                 {badge(category.title(), '#8b5cf6') if category else ''}
             </div>
-            <div style="color:#f1f5f9;font-size:0.95rem;line-height:1.65;margin-bottom:0.75rem;">{q_text}</div>
-            {f'<div style="color:#64748b;font-size:0.82rem;margin-top:0.4rem;">💡 <em>{star_tip}</em></div>' if star_tip else ''}
+            <div style="color:var(--text-primary);font-size:0.95rem;line-height:1.65;margin-bottom:0.75rem;">{q_text}</div>
+            {f'<div style="color:var(--text-muted);font-size:0.82rem;margin-top:0.4rem;">💡 <em>{star_tip}</em></div>' if star_tip else ''}
             {f'<div style="color:#06b6d4;font-size:0.8rem;margin-top:0.3rem;">🎯 Interviewer looks for: {looks_for}</div>' if looks_for else ''}
         </div>
         """, unsafe_allow_html=True)
@@ -156,7 +156,7 @@ if questions:
                 star_cols = st.columns(4)
                 for col, (part, status) in zip(star_cols, star_analysis.items()):
                     color = "#22c55e" if status == "present" else "#f59e0b" if status == "partial" else "#ef4444"
-                    icon = "✅" if status == "present" else "⚠️" if status == "partial" else "❌"
+                    icon = "check_circle" if status == "present" else "⚠️" if status == "partial" else "cancel"
                     col.markdown(f'<div style="text-align:center;"><div style="font-weight:700;color:{color};">{icon} {part.upper()}</div><div style="color:{color};font-size:0.8rem;">{status}</div></div>', unsafe_allow_html=True)
 
             # Emotion indicators
@@ -165,7 +165,7 @@ if questions:
                 confidence_level = emotion.get("confidence_level", "medium")
                 conf_color = "#22c55e" if confidence_level == "high" else "#f59e0b" if confidence_level == "medium" else "#ef4444"
                 fillers = emotion.get("filler_patterns", [])
-                st.markdown(f'<div style="color:#94a3b8;font-size:0.85rem;margin-top:0.5rem;">Confidence: <span style="color:{conf_color};">{confidence_level.upper()}</span> · Filler words detected: <span style="color:#ef4444;">{", ".join(fillers) if fillers else "None"}</span></div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:0.5rem;">Confidence: <span style="color:{conf_color};">{confidence_level.upper()}</span> · Filler words detected: <span style="color:#ef4444;">{", ".join(fillers) if fillers else "None"}</span></div>', unsafe_allow_html=True)
 
         st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
 
@@ -176,11 +176,11 @@ if questions:
         <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);
              border-radius:14px;padding:1.5rem;text-align:center;margin-top:1rem;">
             <div style="font-size:2rem;">{emoji}</div>
-            <div style="font-size:2rem;font-weight:800;color:#8b5cf6;">{avg:.1f}<span style="font-size:1rem;color:#94a3b8;">/100</span></div>
-            <div style="color:#94a3b8;">HR Interview Session Score</div>
+            <div style="font-size:2rem;font-weight:800;color:#8b5cf6;">{avg:.1f}<span style="font-size:1rem;color:var(--text-secondary);">/100</span></div>
+            <div style="color:var(--text-secondary);">HR Interview Session Score</div>
         </div>
         """, unsafe_allow_html=True)
 
 else:
     if not gen_btn:
-        empty_state("🤝", "Ready for HR Practice", "Configure your session and generate behavioral questions to begin!", "← Set your target role and focus areas")
+        empty_state("handshake", "Ready for HR Practice", "Configure your session and generate behavioral questions to begin!", "← Set your target role and focus areas")

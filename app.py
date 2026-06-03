@@ -18,7 +18,7 @@ from src.components.ui_components import inject_global_css, render_sidebar_nav, 
 # ── Main Page Config ──────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="AI Interview Prep Assistant",
-    page_icon="🎯",
+    page_icon=":material/target:",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
@@ -109,26 +109,26 @@ if is_authenticated():
     # Core Page Navigation Definitions
     pages = {
         "Dashboard": [
-            st.Page("pages/01_Dashboard.py", title="Dashboard", icon="📊", default=True),
-            st.Page("pages/11_Performance_Analytics.py", title="Performance Analytics", icon="📈"),
-            st.Page("pages/12_Leaderboard.py", title="Leaderboard & XP", icon="🏆"),
+            st.Page("pages/01_Dashboard.py", title="Dashboard", icon=":material/dashboard:", default=True),
+            st.Page("pages/11_Performance_Analytics.py", title="Performance Analytics", icon=":material/trending_up:"),
+            st.Page("pages/12_Leaderboard.py", title="Leaderboard & XP", icon=":material/emoji_events:"),
         ],
         "AI Coaching": [
-            st.Page("pages/06_Mock_Interview.py", title="Mock Interview", icon="🤖"),
-            st.Page("pages/03_Technical_Interview.py", title="Technical Interview", icon="💻"),
-            st.Page("pages/04_HR_Interview.py", title="HR Interview", icon="🤝"),
-            st.Page("pages/05_Coding_Interview.py", title="Coding Interview", icon="👨‍💻"),
-            st.Page("pages/07_Voice_Interview.py", title="Voice Interview", icon="🎙️"),
-            st.Page("pages/08_Company_Prep.py", title="Company Prep", icon="🏢"),
+            st.Page("pages/06_Mock_Interview.py", title="Mock Interview", icon=":material/smart_toy:"),
+            st.Page("pages/03_Technical_Interview.py", title="Technical Interview", icon=":material/terminal:"),
+            st.Page("pages/04_HR_Interview.py", title="HR Interview", icon=":material/handshake:"),
+            st.Page("pages/05_Coding_Interview.py", title="Coding Interview", icon=":material/code:"),
+            st.Page("pages/07_Voice_Interview.py", title="Voice Interview", icon=":material/mic:"),
+            st.Page("pages/08_Company_Prep.py", title="Company Prep", icon=":material/domain:"),
         ],
         "Resources": [
-            st.Page("pages/02_Resume_Analyzer.py", title="Resume Analyzer", icon="📄"),
-            st.Page("pages/09_RAG_Assistant.py", title="RAG Assistant", icon="🧠"),
-            st.Page("pages/10_Personalized_Roadmap.py", title="Personalized Roadmap", icon="🗺️"),
-            st.Page("pages/14_Career_Coach.py", title="Career Coach", icon="💬"),
+            st.Page("pages/02_Resume_Analyzer.py", title="Resume Analyzer", icon=":material/description:"),
+            st.Page("pages/09_RAG_Assistant.py", title="RAG Assistant", icon=":material/psychology:"),
+            st.Page("pages/10_Personalized_Roadmap.py", title="Personalized Roadmap", icon=":material/map:"),
+            st.Page("pages/14_Career_Coach.py", title="Career Coach", icon=":material/forum:"),
         ],
         "System": [
-            st.Page("pages/15_Settings.py", title="Settings", icon="⚙️"),
+            st.Page("pages/15_Settings.py", title="Settings", icon=":material/settings:"),
         ]
     }
 
@@ -143,7 +143,7 @@ if is_authenticated():
 
     if is_admin:
         pages["System"].append(
-            st.Page("pages/13_Admin_Dashboard.py", title="Admin Dashboard", icon="🛡️")
+            st.Page("pages/13_Admin_Dashboard.py", title="Admin Dashboard", icon=":material/admin_panel_settings:")
         )
 
     # Render Custom Sidebar structure
@@ -176,7 +176,7 @@ if is_authenticated():
 
         # 4. Sign-out at the bottom
         st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
-        if st.button("🚪 Sign Out", use_container_width=True, key="app_signout"):
+        if st.button("Sign Out", use_container_width=True, key="app_signout", icon=":material/logout:"):
             sign_out()
             st.rerun()
 
@@ -187,5 +187,5 @@ if is_authenticated():
     pg.run()
 else:
     # Logged out state - only allow access to Login screen
-    pg = st.navigation([st.Page("pages/login.py", title="Welcome", icon="🔐")], position="hidden")
+    pg = st.navigation([st.Page("pages/login.py", title="Welcome", icon=":material/lock:")], position="hidden")
     pg.run()

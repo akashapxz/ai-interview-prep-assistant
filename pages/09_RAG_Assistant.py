@@ -27,7 +27,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("RAG Knowledge Assistant", "Upload your study materials and ask questions — AI answers from YOUR documents", "🧠")
+page_header("RAG Knowledge Assistant", "Upload your study materials and ask questions — AI answers from YOUR documents", "psychology")
 
 tabs = st.tabs(["💬 Ask Questions", "📤 Upload Documents", "📋 Chat History"])
 
@@ -49,7 +49,7 @@ with tabs[0]:
         <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);
              border-radius:12px;padding:1rem;margin-bottom:1rem;">
             <div style="color:#fbbf24;font-weight:600;">⚠️ No indexed documents found</div>
-            <div style="color:#94a3b8;font-size:0.9rem;margin-top:0.3rem;">
+            <div style="color:var(--text-secondary);font-size:0.9rem;margin-top:0.3rem;">
                 Upload and index your study materials in the "Upload Documents" tab first.
                 The AI will answer questions from your uploaded materials.
             </div>
@@ -84,7 +84,7 @@ with tabs[0]:
             <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;">
                 <div style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.25);
                      border-radius:16px 16px 4px 16px;padding:0.75rem 1rem;max-width:70%;">
-                    <div style="color:#f1f5f9;line-height:1.6;">{content}</div>
+                    <div style="color:var(--text-primary);line-height:1.6;">{content}</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -97,10 +97,10 @@ with tabs[0]:
             <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;">
                 <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#06b6d4);
                      display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🧠</div>
-                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+                <div style="background:var(--bg-card);border:1px solid var(--border);
                      border-radius:4px 16px 16px 16px;padding:0.75rem 1rem;flex:1;">
                     <div style="color:#818cf8;font-size:0.72rem;font-weight:600;margin-bottom:0.3rem;">RAG ASSISTANT</div>
-                    <div style="color:#e2e8f0;line-height:1.65;">{content}</div>
+                    <div style="color:var(--text-primary);line-height:1.65;">{content}</div>
                     {sources_html}
                 </div>
             </div>
@@ -151,7 +151,7 @@ with tabs[0]:
 # ── TAB 2: Upload Documents ───────────────────────────────────────────────────
 with tabs[1]:
     st.markdown("### 📤 Upload Study Materials")
-    st.markdown('<div style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Upload PDFs, DOCX, or TXT files — placement notes, interview guides, textbooks, etc.</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1rem;">Upload PDFs, DOCX, or TXT files — placement notes, interview guides, textbooks, etc.</div>', unsafe_allow_html=True)
 
     doc_type = st.selectbox(
         "Document Type",
@@ -229,15 +229,15 @@ with tabs[1]:
             chunks = doc.get("chunk_count", 0)
             doc_type_label = doc.get("doc_type", "general").replace("_", " ").title()
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+            <div style="background:var(--bg-card);border:1px solid var(--border);
                  border-radius:12px;padding:0.75rem 1rem;margin-bottom:0.4rem;
                  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
                 <div>
-                    <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">📄 {doc['file_name']}</span>
-                    <div style="color:#64748b;font-size:0.78rem;">{doc_type_label} · {doc['file_type']} · {doc.get('file_size',0)//1024}KB</div>
+                    <span style="color:var(--text-primary);font-weight:600;font-size:0.9rem;">📄 {doc['file_name']}</span>
+                    <div style="color:var(--text-muted);font-size:0.78rem;">{doc_type_label} · {doc['file_type']} · {doc.get('file_size',0)//1024}KB</div>
                 </div>
                 <div style="display:flex;align-items:center;gap:0.75rem;">
-                    <span style="color:#64748b;font-size:0.78rem;">{chunks} chunks</span>
+                    <span style="color:var(--text-muted);font-size:0.78rem;">{chunks} chunks</span>
                     <span style="{'color:#22c55e' if indexed else 'color:#f59e0b'};font-size:0.82rem;font-weight:600;">{'✅ Indexed' if indexed else '⏳ Pending'}</span>
                 </div>
             </div>
@@ -264,6 +264,6 @@ with tabs[2]:
                     color = "#818cf8" if role == "user" else "#06b6d4"
                     label = "You" if role == "user" else "RAG Assistant"
                     st.markdown(f'<div style="color:{color};font-size:0.75rem;font-weight:600;">{label}:</div>', unsafe_allow_html=True)
-                    st.markdown(f'<div style="color:#e2e8f0;font-size:0.88rem;margin-bottom:0.5rem;">{msg["content"][:200]}...</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div style="color:var(--text-primary);font-size:0.88rem;margin-bottom:0.5rem;">{msg["content"][:200]}...</div>', unsafe_allow_html=True)
     else:
-        empty_state("💬", "No chat history", "Start asking questions in the 'Ask Questions' tab!")
+        empty_state("forum", "No chat history", "Start asking questions in the 'Ask Questions' tab!")

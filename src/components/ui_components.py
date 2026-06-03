@@ -1,10 +1,24 @@
 """
 UI Components — Reusable Streamlit components with custom CSS.
 Implements glassmorphism, animations, and premium design.
+Supports both light and dark Streamlit themes via JS-based detection.
+Uses Material Symbols Outlined icons instead of emojis for a professional look.
 """
 
 import streamlit as st
 from typing import Optional, List, Dict, Any
+
+
+# ─────────────────────────────────────────────
+# Material icon helper
+# ─────────────────────────────────────────────
+
+def mi(name: str, size: str = "1.25rem", color: str = "") -> str:
+    """Return an inline Material Symbols Outlined icon span."""
+    style = f"font-size:{size};vertical-align:middle;line-height:1;"
+    if color:
+        style += f"color:{color};"
+    return f'<span class="material-symbols-outlined" style="{style}">{name}</span>'
 
 
 # ─────────────────────────────────────────────
@@ -13,11 +27,12 @@ from typing import Optional, List, Dict, Any
 
 def inject_global_css():
     st.markdown("""
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <style>
     /* ── Google Font ── */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-    /* ── Root variables ── */
+    /* ── Root variables (dark mode defaults) ── */
     :root {
         --primary: #6366f1;
         --primary-dark: #4f46e5;
@@ -34,6 +49,7 @@ def inject_global_css():
         --text-primary: #f1f5f9;
         --text-secondary: #94a3b8;
         --text-muted: #64748b;
+        --text-heading: #f1f5f9;
         --success: #22c55e;
         --warning: #f59e0b;
         --danger: #ef4444;
@@ -42,14 +58,40 @@ def inject_global_css():
         --shadow: 0 8px 32px rgba(0,0,0,0.4);
         --shadow-accent: 0 0 30px rgba(99,102,241,0.2);
         --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        --code-bg: rgba(0,0,0,0.4);
+        --sidebar-bg: rgba(10,10,20,0.95);
+        --divider: rgba(255,255,255,0.1);
+        --score-track: rgba(255,255,255,0.06);
+    }
+
+    /* ── Light mode overrides ── */
+    html[data-theme="light"] {
+        --bg-base: #ffffff;
+        --bg-card: rgba(0,0,0,0.03);
+        --bg-card-hover: rgba(0,0,0,0.06);
+        --bg-glass: rgba(99,102,241,0.06);
+        --border: rgba(0,0,0,0.1);
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+        --text-muted: #94a3b8;
+        --text-heading: #0f172a;
+        --shadow: 0 8px 32px rgba(0,0,0,0.08);
+        --code-bg: rgba(0,0,0,0.06);
+        --sidebar-bg: rgba(248,250,252,0.98);
+        --divider: rgba(0,0,0,0.08);
+        --score-track: rgba(0,0,0,0.06);
     }
 
     /* ── Global reset ── */
     * { box-sizing: border-box; }
     html, body, [data-testid="stAppViewContainer"] {
-        background: var(--bg-base) !important;
         font-family: 'Inter', sans-serif !important;
         color: var(--text-primary) !important;
+    }
+
+    /* ── Material Symbols base style ── */
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
 
     /* ── Hide Streamlit chrome ── */
@@ -65,7 +107,7 @@ def inject_global_css():
 
     /* ── Sidebar ── */
     [data-testid="stSidebar"] {
-        background: rgba(10,10,20,0.95) !important;
+        background: var(--sidebar-bg) !important;
         border-right: 1px solid var(--border) !important;
         backdrop-filter: blur(20px);
     }
@@ -110,7 +152,7 @@ def inject_global_css():
     .stTextArea > div > div > textarea,
     .stSelectbox > div > div > div,
     .stNumberInput > div > div > input {
-        background: rgba(255,255,255,0.05) !important;
+        background: var(--bg-card) !important;
         border: 1px solid var(--border) !important;
         border-radius: 10px !important;
         color: var(--text-primary) !important;
@@ -172,7 +214,7 @@ def inject_global_css():
     /* ── Code blocks ── */
     code, pre {
         font-family: 'JetBrains Mono', monospace !important;
-        background: rgba(0,0,0,0.4) !important;
+        background: var(--code-bg) !important;
         border-radius: 8px !important;
     }
 
@@ -216,6 +258,24 @@ def inject_global_css():
     .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
     .animate-pulse-glow { animation: pulse-glow 2s infinite; }
     </style>
+
+    <script>
+    (function(){
+        function detectTheme(){
+            var el = document.querySelector('[data-testid="stAppViewContainer"]');
+            if(!el) return;
+            var bg = getComputedStyle(el).backgroundColor;
+            var m = bg.match(/(\\d+)/g);
+            if(m && m.length >= 3){
+                var lum = (parseInt(m[0])*299 + parseInt(m[1])*587 + parseInt(m[2])*114)/1000;
+                document.documentElement.setAttribute('data-theme', lum > 128 ? 'light' : 'dark');
+            }
+        }
+        new MutationObserver(detectTheme).observe(document.body, {attributes:true,childList:true,subtree:true});
+        setTimeout(detectTheme, 200);
+        setTimeout(detectTheme, 1000);
+    })();
+    </script>
     """, unsafe_allow_html=True)
 
 
@@ -224,10 +284,10 @@ def inject_global_css():
 # ─────────────────────────────────────────────
 
 def glass_card(content: str, padding: str = "1.5rem", border_accent: bool = False) -> None:
-    border = "border: 1px solid rgba(99,102,241,0.4);" if border_accent else "border: 1px solid rgba(255,255,255,0.08);"
+    border = "border: 1px solid var(--border-accent);" if border_accent else "border: 1px solid var(--border);"
     st.markdown(f"""
     <div style="
-        background: rgba(255,255,255,0.04);
+        background: var(--bg-card);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border-radius: 16px;
@@ -241,10 +301,11 @@ def glass_card(content: str, padding: str = "1.5rem", border_accent: bool = Fals
 
 
 def kpi_card(icon: str, title: str, value: str, subtitle: str = "", color: str = "#6366f1") -> str:
+    """Render a KPI stat card. `icon` should be a Material Symbols icon name."""
     return f"""
     <div style="
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
+        background: var(--bg-card);
+        border: 1px solid var(--border);
         border-radius: 16px;
         padding: 1.25rem;
         text-align: center;
@@ -253,10 +314,10 @@ def kpi_card(icon: str, title: str, value: str, subtitle: str = "", color: str =
         overflow: hidden;
     ">
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,{color},{color}88);"></div>
-        <div style="font-size:2rem;margin-bottom:0.4rem;">{icon}</div>
+        <div style="margin-bottom:0.4rem;">{mi(icon, "2rem", color)}</div>
         <div style="font-size:1.8rem;font-weight:800;color:{color};line-height:1;">{value}</div>
-        <div style="font-size:0.85rem;color:#94a3b8;margin-top:0.3rem;font-weight:500;">{title}</div>
-        {f'<div style="font-size:0.75rem;color:#64748b;margin-top:0.2rem;">{subtitle}</div>' if subtitle else ''}
+        <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.3rem;font-weight:500;">{title}</div>
+        {f'<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem;">{subtitle}</div>' if subtitle else ''}
     </div>
     """
 
@@ -266,7 +327,7 @@ def score_ring(score: float, label: str, size: int = 120) -> str:
     pct = score / 100
     circumference = 2 * 3.14159 * 45
     offset = circumference * (1 - pct)
-    return f'<div style="text-align:center;display:inline-block;"><svg width="{size}" height="{size}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/><circle cx="50" cy="50" r="45" fill="none" stroke="{color}" stroke-width="8" stroke-linecap="round" stroke-dasharray="{circumference:.1f}" stroke-dashoffset="{offset:.1f}" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s ease;"/><text x="50" y="46" text-anchor="middle" fill="{color}" font-size="18" font-weight="bold" font-family="Inter">{score:.0f}</text><text x="50" y="62" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="Inter">/ 100</text></svg><div style="color:#94a3b8;font-size:0.8rem;margin-top:0.25rem;font-weight:500;">{label}</div></div>'
+    return f'<div style="text-align:center;display:inline-block;"><svg width="{size}" height="{size}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="var(--score-track)" stroke-width="8"/><circle cx="50" cy="50" r="45" fill="none" stroke="{color}" stroke-width="8" stroke-linecap="round" stroke-dasharray="{circumference:.1f}" stroke-dashoffset="{offset:.1f}" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s ease;"/><text x="50" y="46" text-anchor="middle" fill="{color}" font-size="18" font-weight="bold" font-family="Inter">{score:.0f}</text><text x="50" y="62" text-anchor="middle" fill="var(--text-secondary)" font-size="9" font-family="Inter">/ 100</text></svg><div style="color:var(--text-secondary);font-size:0.8rem;margin-top:0.25rem;font-weight:500;">{label}</div></div>'
 
 
 def badge(text: str, color: str = "#6366f1", bg_opacity: float = 0.15) -> str:
@@ -286,27 +347,29 @@ def badge(text: str, color: str = "#6366f1", bg_opacity: float = 0.15) -> str:
 
 def difficulty_badge(difficulty: str) -> str:
     colors = {"easy": "#22c55e", "medium": "#f59e0b", "hard": "#ef4444"}
-    icons = {"easy": "🟢", "medium": "🟡", "hard": "🔴"}
+    icons = {"easy": "check_circle", "medium": "warning", "hard": "error"}
     c = colors.get(difficulty.lower(), "#94a3b8")
-    i = icons.get(difficulty.lower(), "⚪")
-    return badge(f"{i} {difficulty.capitalize()}", c)
+    i = icons.get(difficulty.lower(), "help")
+    return badge(f'{mi(i, "0.85rem", c)} {difficulty.capitalize()}', c)
 
 
 def page_header(title: str, subtitle: str = "", icon: str = ""):
+    """Render a page header. `icon` should be a Material Symbols icon name."""
+    icon_html = f'{mi(icon, "2rem", "var(--primary-light)")}' if icon else ''
     st.markdown(f"""
     <div style="margin-bottom:2rem;animation:fadeInUp 0.6s ease;">
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.4rem;">
-            {f'<span style="font-size:2rem;">{icon}</span>' if icon else ''}
+            {icon_html}
             <h1 style="
                 font-size:clamp(1.6rem,3vw,2.2rem);
                 font-weight:800;
-                background:linear-gradient(135deg,#f1f5f9,#6366f1);
+                background:linear-gradient(135deg, var(--text-heading), var(--primary));
                 -webkit-background-clip:text;
                 -webkit-text-fill-color:transparent;
                 margin:0;line-height:1.2;
             ">{title}</h1>
         </div>
-        {f'<p style="color:#94a3b8;font-size:1rem;margin:0;">{subtitle}</p>' if subtitle else ''}
+        {f'<p style="color:var(--text-secondary);font-size:1rem;margin:0;">{subtitle}</p>' if subtitle else ''}
         <div style="height:2px;background:linear-gradient(90deg,#6366f1,#8b5cf6,transparent);margin-top:0.75rem;border-radius:99px;"></div>
     </div>
     """, unsafe_allow_html=True)
@@ -317,24 +380,26 @@ def loading_skeleton(lines: int = 3):
         st.markdown("""
         <div style="
             height:20px;border-radius:8px;margin-bottom:8px;
-            background:linear-gradient(90deg,rgba(255,255,255,0.05) 25%,rgba(255,255,255,0.1) 50%,rgba(255,255,255,0.05) 75%);
+            background:linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
             background-size:200% 100%;
             animation:shimmer 1.5s infinite;
         "></div>""", unsafe_allow_html=True)
 
 
 def empty_state(icon: str, title: str, description: str, action: str = ""):
+    """Render an empty state placeholder. `icon` should be a Material Symbols icon name."""
     st.markdown(f"""
     <div style="text-align:center;padding:3rem 2rem;animation:fadeInUp 0.5s ease;">
-        <div style="font-size:4rem;margin-bottom:1rem;">{icon}</div>
-        <h3 style="color:#f1f5f9;font-weight:700;margin-bottom:0.5rem;">{title}</h3>
-        <p style="color:#94a3b8;max-width:400px;margin:0 auto;">{description}</p>
-        {f'<p style="color:#6366f1;margin-top:1rem;font-weight:600;">{action}</p>' if action else ''}
+        <div style="margin-bottom:1rem;">{mi(icon, "4rem", "var(--text-muted)")}</div>
+        <h3 style="color:var(--text-primary);font-weight:700;margin-bottom:0.5rem;">{title}</h3>
+        <p style="color:var(--text-secondary);max-width:400px;margin:0 auto;">{description}</p>
+        {f'<p style="color:var(--primary);margin-top:1rem;font-weight:600;">{action}</p>' if action else ''}
     </div>
     """, unsafe_allow_html=True)
 
 
-def success_banner(message: str, icon: str = "✅"):
+def success_banner(message: str, icon: str = "check_circle"):
+    """Render a success banner. `icon` should be a Material Symbols icon name."""
     st.markdown(f"""
     <div style="
         background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(16,185,129,0.1));
@@ -343,7 +408,7 @@ def success_banner(message: str, icon: str = "✅"):
         display:flex;align-items:center;gap:0.75rem;
         animation:fadeInUp 0.4s ease;
     ">
-        <span style="font-size:1.5rem;">{icon}</span>
+        {mi(icon, "1.5rem", "#4ade80")}
         <span style="color:#4ade80;font-weight:600;">{message}</span>
     </div>
     """, unsafe_allow_html=True)
@@ -371,16 +436,16 @@ def render_sidebar_nav(profile: Dict):
                 margin:0 auto 0.6rem;
                 box-shadow:0 0 20px rgba(99,102,241,0.4);
             ">{avatar_char}</div>
-            <div style="color:#f1f5f9;font-weight:700;font-size:0.95rem;">{name}</div>
+            <div style="color:var(--text-primary);font-weight:700;font-size:0.95rem;">{name}</div>
             <div style="display:flex;justify-content:center;gap:1rem;margin-top:0.6rem;">
                 <div style="text-align:center;">
                     <div style="color:#6366f1;font-weight:700;font-size:1rem;">{xp:,}</div>
-                    <div style="color:#64748b;font-size:0.7rem;">XP</div>
+                    <div style="color:var(--text-muted);font-size:0.7rem;">XP</div>
                 </div>
-                <div style="width:1px;background:rgba(255,255,255,0.1);"></div>
+                <div style="width:1px;background:var(--divider);"></div>
                 <div style="text-align:center;">
-                    <div style="color:#f59e0b;font-weight:700;font-size:1rem;">🔥 {streak}</div>
-                    <div style="color:#64748b;font-size:0.7rem;">Streak</div>
+                    <div style="color:#f59e0b;font-weight:700;font-size:1rem;">{mi("local_fire_department","1rem","#f59e0b")} {streak}</div>
+                    <div style="color:var(--text-muted);font-size:0.7rem;">Streak</div>
                 </div>
             </div>
         </div>
@@ -389,29 +454,29 @@ def render_sidebar_nav(profile: Dict):
 
 
 def render_ai_provider_selector():
-    """Sidebar widget to switch between Gemini and Groq — shown at top of sidebar."""
-    st.sidebar.markdown("""
+    """Sidebar widget to switch between AI providers."""
+    st.sidebar.markdown(f"""
     <div style="padding:0 0.25rem 0.4rem;">
         <div style="
-            background:rgba(99,102,241,0.07);
+            background:var(--bg-glass);
             border:1px solid rgba(99,102,241,0.2);
             border-radius:12px;
             padding:0.6rem 0.85rem 0.5rem;
         ">
-            <div style="color:#64748b;font-size:0.68rem;font-weight:700;
+            <div style="color:var(--text-muted);font-size:0.68rem;font-weight:700;
                         text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.35rem;">
-                🤖 AI Engine
+                {mi("smart_toy","0.85rem","var(--text-muted)")} AI Engine
             </div>
     """, unsafe_allow_html=True)
     provider = st.sidebar.selectbox(
         "AI Model",
         ["gemini", "groq", "openai", "anthropic", "openrouter"],
         format_func=lambda x: {
-            "gemini": "✨ Gemini 2.5 Flash",
-            "groq": "⚡ Groq · Llama 3.3",
-            "openai": "🟢 OpenAI · GPT-4o Mini",
-            "anthropic": "🟠 Claude 3.5 Sonnet",
-            "openrouter": "🟣 OpenRouter · Llama 3.3"
+            "gemini": "Gemini 2.5 Flash",
+            "groq": "Groq · Llama 3.3",
+            "openai": "OpenAI · GPT-4o Mini",
+            "anthropic": "Claude 3.5 Sonnet",
+            "openrouter": "OpenRouter · Llama 3.3"
         }.get(x, x),
         key="ai_provider",
         label_visibility="collapsed",
@@ -423,11 +488,11 @@ def render_ai_provider_selector():
 def feedback_card(score: float, feedback: str, model_answer: Optional[str] = None):
     """Show AI evaluation feedback with styled card."""
     color = "#22c55e" if score >= 80 else "#f59e0b" if score >= 60 else "#ef4444"
-    grade_emoji = "🏆" if score >= 90 else "⭐" if score >= 75 else "👍" if score >= 60 else "📈"
+    grade_icon = "emoji_events" if score >= 90 else "star" if score >= 75 else "thumb_up" if score >= 60 else "trending_up"
 
     st.markdown(f"""
     <div style="
-        background:rgba(255,255,255,0.04);
+        background:var(--bg-card);
         border:1px solid {color}44;
         border-left:4px solid {color};
         border-radius:12px;
@@ -436,13 +501,13 @@ def feedback_card(score: float, feedback: str, model_answer: Optional[str] = Non
         animation:fadeInUp 0.5s ease;
     ">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-            <span style="color:{color};font-size:1.4rem;font-weight:800;">{grade_emoji} {score:.0f}/100</span>
-            <span style="color:#94a3b8;font-size:0.8rem;">AI Evaluation</span>
+            <span style="color:{color};font-size:1.4rem;font-weight:800;">{mi(grade_icon,"1.4rem",color)} {score:.0f}/100</span>
+            <span style="color:var(--text-secondary);font-size:0.8rem;">AI Evaluation</span>
         </div>
-        <p style="color:#e2e8f0;margin:0;line-height:1.6;">{feedback}</p>
+        <p style="color:var(--text-primary);margin:0;line-height:1.6;">{feedback}</p>
     </div>
     """, unsafe_allow_html=True)
 
     if model_answer:
-        with st.expander("💡 View Model Answer"):
-            st.markdown(f'<div style="color:#e2e8f0;line-height:1.7;">{model_answer}</div>', unsafe_allow_html=True)
+        with st.expander("View Model Answer"):
+            st.markdown(f'<div style="color:var(--text-primary);line-height:1.7;">{model_answer}</div>', unsafe_allow_html=True)

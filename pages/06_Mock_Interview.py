@@ -31,7 +31,7 @@ profile = get_current_profile()
 user_id = user["id"]
 candidate_name = profile.get("full_name", "Candidate") if profile else "Candidate"
 
-page_header("AI Mock Interview", "Realistic AI-powered interviews with multiple personas and a comprehensive final report", "🤖")
+page_header("AI Mock Interview", "Realistic AI-powered interviews with multiple personas and a comprehensive final report", "smart_toy")
 
 # ── PHASE 1: Setup ────────────────────────────────────────────────────────────
 if not st.session_state.get("mock_active") and not st.session_state.get("mock_complete"):
@@ -57,7 +57,7 @@ if not st.session_state.get("mock_active") and not st.session_state.get("mock_co
             "Startup Founder": "Fast-paced, execution-oriented",
             "HR Manager": "Soft skills and STAR method focused",
         }
-        st.markdown(f'<div style="color:#64748b;font-size:0.85rem;margin-top:-0.5rem;">{persona_desc.get(persona,"")}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="color:var(--text-muted);font-size:0.85rem;margin-top:-0.5rem;">{persona_desc.get(persona,"")}</div>', unsafe_allow_html=True)
 
     with c2:
         domain = st.selectbox("Technical Domain", SKILL_DOMAINS, key="mock_domain")
@@ -71,10 +71,10 @@ if not st.session_state.get("mock_active") and not st.session_state.get("mock_co
          border-radius:14px;padding:1.25rem;margin:1rem 0;">
         <div style="color:#818cf8;font-weight:700;margin-bottom:0.5rem;">Interview Preview</div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;">
-            <div><span style="color:#64748b;font-size:0.8rem;">Type</span><br><span style="color:#f1f5f9;font-weight:600;">{interview_type}</span></div>
-            <div><span style="color:#64748b;font-size:0.8rem;">Persona</span><br><span style="color:#f1f5f9;font-weight:600;">{persona}</span></div>
-            <div><span style="color:#64748b;font-size:0.8rem;">Domain</span><br><span style="color:#f1f5f9;font-weight:600;">{domain}</span></div>
-            <div><span style="color:#64748b;font-size:0.8rem;">Questions</span><br><span style="color:#f1f5f9;font-weight:600;">{total_questions}</span></div>
+            <div><span style="color:var(--text-muted);font-size:0.8rem;">Type</span><br><span style="color:var(--text-primary);font-weight:600;">{interview_type}</span></div>
+            <div><span style="color:var(--text-muted);font-size:0.8rem;">Persona</span><br><span style="color:var(--text-primary);font-weight:600;">{persona}</span></div>
+            <div><span style="color:var(--text-muted);font-size:0.8rem;">Domain</span><br><span style="color:var(--text-primary);font-weight:600;">{domain}</span></div>
+            <div><span style="color:var(--text-muted);font-size:0.8rem;">Questions</span><br><span style="color:var(--text-primary);font-weight:600;">{total_questions}</span></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -128,7 +128,7 @@ elif st.session_state.get("mock_active") and not st.session_state.get("mock_comp
             {badge(interview_type, '#8b5cf6')}
             {badge(domain, '#06b6d4')}
         </div>
-        <div style="color:#94a3b8;font-size:0.85rem;">Question {current_q + 1} of {total_q}</div>
+        <div style="color:var(--text-secondary);font-size:0.85rem;">Question {current_q + 1} of {total_q}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -147,7 +147,7 @@ elif st.session_state.get("mock_active") and not st.session_state.get("mock_comp
                 <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);
                      border-radius:12px 12px 12px 4px;padding:0.75rem 1rem;flex:1;">
                     <div style="color:#818cf8;font-size:0.75rem;font-weight:600;margin-bottom:0.3rem;">{persona.upper()}</div>
-                    <div style="color:#e2e8f0;line-height:1.6;">{qa.get('question','')}</div>
+                    <div style="color:var(--text-primary);line-height:1.6;">{qa.get('question','')}</div>
                 </div>
             </div>
             <div style="display:flex;gap:0.75rem;margin-bottom:1rem;flex-direction:row-reverse;">
@@ -158,7 +158,7 @@ elif st.session_state.get("mock_active") and not st.session_state.get("mock_comp
                 <div style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);
                      border-radius:12px 12px 4px 12px;padding:0.75rem 1rem;flex:1;text-align:right;">
                     <div style="color:#06b6d4;font-size:0.75rem;font-weight:600;margin-bottom:0.3rem;">YOU</div>
-                    <div style="color:#e2e8f0;line-height:1.6;">{qa.get('answer','')}</div>
+                    <div style="color:var(--text-primary);line-height:1.6;">{qa.get('answer','')}</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -183,7 +183,7 @@ elif st.session_state.get("mock_active") and not st.session_state.get("mock_comp
             st.session_state["mock_current_question"] = q_result.get("question", "Tell me about yourself.")
             interviewer_comment = q_result.get("interviewer_comment", "")
             if interviewer_comment:
-                st.markdown(f'<div style="color:#64748b;font-style:italic;margin-bottom:0.5rem;">"{interviewer_comment}"</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="color:var(--text-muted);font-style:italic;margin-bottom:0.5rem;">"{interviewer_comment}"</div>', unsafe_allow_html=True)
         else:
             st.session_state["mock_current_question"] = "Can you tell me about your background and experience?"
 
@@ -199,7 +199,7 @@ elif st.session_state.get("mock_active") and not st.session_state.get("mock_comp
              border-radius:12px 12px 12px 4px;padding:1rem 1.25rem;flex:1;
              animation:fadeInUp 0.4s ease;">
             <div style="color:#818cf8;font-size:0.75rem;font-weight:600;margin-bottom:0.4rem;">{persona.upper()} · Q{current_q+1}/{total_q}</div>
-            <div style="color:#f1f5f9;font-size:1rem;line-height:1.65;">{current_question}</div>
+            <div style="color:var(--text-primary);font-size:1rem;line-height:1.65;">{current_question}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -249,8 +249,8 @@ elif st.session_state.get("mock_complete"):
     st.markdown("""
     <div style="text-align:center;padding:1.5rem 0;animation:fadeInUp 0.5s ease;">
         <div style="font-size:3rem;margin-bottom:0.5rem;">🎉</div>
-        <h2 style="color:#f1f5f9;font-weight:800;">Interview Complete!</h2>
-        <p style="color:#94a3b8;">Generating your comprehensive performance report...</p>
+        <h2 style="color:var(--text-primary);font-weight:800;">Interview Complete!</h2>
+        <p style="color:var(--text-secondary);">Generating your comprehensive performance report...</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -291,9 +291,9 @@ elif st.session_state.get("mock_complete"):
         <div style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));
              border:1px solid rgba(99,102,241,0.3);border-radius:20px;padding:2rem;text-align:center;margin-bottom:2rem;">
             <div style="font-size:3.5rem;margin-bottom:0.5rem;">{emoji}</div>
-            <div style="font-size:3.5rem;font-weight:900;color:#6366f1;line-height:1;">{overall:.0f}<span style="font-size:1.5rem;color:#94a3b8;">/100</span></div>
+            <div style="font-size:3.5rem;font-weight:900;color:#6366f1;line-height:1;">{overall:.0f}<span style="font-size:1.5rem;color:var(--text-secondary);">/100</span></div>
             <div style="color:#818cf8;font-size:1.1rem;font-weight:600;margin:0.5rem 0;">{readiness}</div>
-            <div style="color:#64748b;">Duration: {duration} min · {len(qa_list)} questions answered</div>
+            <div style="color:var(--text-muted);">Duration: {duration} min · {len(qa_list)} questions answered</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -324,9 +324,9 @@ elif st.session_state.get("mock_complete"):
         # Performance summary
         if report.get("performance_summary"):
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:1rem;margin:1rem 0;">
-                <div style="color:#94a3b8;font-size:0.85rem;margin-bottom:0.3rem;">AI Summary</div>
-                <div style="color:#e2e8f0;line-height:1.65;">{report["performance_summary"]}</div>
+            <div style="background:var(--bg-card);border-radius:12px;padding:1rem;margin:1rem 0;">
+                <div style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.3rem;">AI Summary</div>
+                <div style="color:var(--text-primary);line-height:1.65;">{report["performance_summary"]}</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -335,7 +335,7 @@ elif st.session_state.get("mock_complete"):
         if hire:
             hire_colors = {"Strong Hire": "#22c55e", "Hire": "#4ade80", "No Hire": "#f97316", "Strong No Hire": "#ef4444"}
             hire_color = hire_colors.get(hire, "#6366f1")
-            st.markdown(f'<div style="text-align:center;padding:0.75rem;background:rgba(255,255,255,0.04);border-radius:10px;color:{hire_color};font-weight:700;font-size:1.1rem;">Final Recommendation: {hire}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="text-align:center;padding:0.75rem;background:var(--bg-card);border-radius:10px;color:{hire_color};font-weight:700;font-size:1.1rem;">Final Recommendation: {hire}</div>', unsafe_allow_html=True)
 
         # Q&A Breakdown
         with st.expander("📋 Question-by-Question Breakdown"):
@@ -343,8 +343,8 @@ elif st.session_state.get("mock_complete"):
                 score_v = qa.get("score", 0)
                 color = "#22c55e" if score_v >= 80 else "#f59e0b" if score_v >= 60 else "#ef4444"
                 st.markdown(f"""
-                <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:0.6rem;margin-bottom:0.3rem;">
-                    <div style="color:#e2e8f0;font-size:0.9rem;">{qa.get('question','')[:100]}</div>
+                <div style="background:var(--bg-card);border-radius:8px;padding:0.6rem;margin-bottom:0.3rem;">
+                    <div style="color:var(--text-primary);font-size:0.9rem;">{qa.get('question','')[:100]}</div>
                     <div style="color:{color};font-size:0.8rem;margin-top:0.2rem;">Score: {score_v}/100 · {qa.get('brief_feedback','')[:80]}</div>
                 </div>
                 """, unsafe_allow_html=True)

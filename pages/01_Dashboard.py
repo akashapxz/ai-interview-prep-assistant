@@ -70,7 +70,7 @@ name = profile.get("full_name", "there") if profile else "there"
 greeting_hour = int(__import__("datetime").datetime.now().strftime("%H"))
 greeting = "Good morning" if greeting_hour < 12 else "Good afternoon" if greeting_hour < 17 else "Good evening"
 
-page_header(f"{greeting}, {name.split()[0]}! 👋", "Here's your interview preparation overview", "📊")
+page_header(f"{greeting}, {name.split()[0]}! 👋", "Here's your interview preparation overview", "dashboard")
 
 # Daily challenge banner
 today_challenge = db_select("daily_challenges", {"challenge_date": str(date.today())}, limit=1)
@@ -91,7 +91,7 @@ if today_challenge:
             animation:fadeInUp 0.5s ease;
         ">
             <span style="color:#818cf8;font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;">⚡ Daily Challenge · {ch.get('category','General').title()}</span>
-            <p style="color:#f1f5f9;margin:0.4rem 0 0;font-size:0.95rem;line-height:1.6;">{ch['question'][:180]}{'...' if len(ch['question']) > 180 else ''}</p>
+            <p style="color:var(--text-primary);margin:0.4rem 0 0;font-size:0.95rem;line-height:1.6;">{ch['question'][:180]}{'...' if len(ch['question']) > 180 else ''}</p>
         </div>
         """, unsafe_allow_html=True)
     with ch_col2:
@@ -104,7 +104,7 @@ if today_challenge:
                 border-radius:10px;padding:0.5rem;text-align:center;
             ">
                 <div style="color:#22c55e;font-weight:700;font-size:0.82rem;text-transform:uppercase;">Completed</div>
-                <div style="color:#f1f5f9;font-weight:800;font-size:1.05rem;margin-top:0.2rem;">{score:.0f}/100</div>
+                <div style="color:var(--text-primary);font-weight:800;font-size:1.05rem;margin-top:0.2rem;">{score:.0f}/100</div>
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -116,7 +116,7 @@ if today_challenge:
     if not already_solved and st.session_state.get("show_challenge_modal") and st.session_state.get("daily_challenge"):
         ch_data = st.session_state["daily_challenge"]
         with st.expander("✍️ Write your answer — Daily Challenge", expanded=True):
-            st.markdown(f"<p style='color:#e2e8f0;font-size:0.95rem;line-height:1.6;margin-bottom:1rem;'><b>Q:</b> {ch_data['question']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p style='color:var(--text-primary);font-size:0.95rem;line-height:1.6;margin-bottom:1rem;'><b>Q:</b> {ch_data['question']}</p>", unsafe_allow_html=True)
             ch_answer = st.text_area(
                 "Your Answer",
                 placeholder="Type your answer here… Take your time to structure your thoughts.",
@@ -148,10 +148,10 @@ if today_challenge:
                             
                             color = "#22c55e" if score >= 80 else "#f59e0b" if score >= 60 else "#ef4444"
                             st.markdown(f"""
-                            <div style="background:rgba(255,255,255,0.04);border-left:4px solid {color};
+                            <div style="background:var(--bg-card);border-left:4px solid {color};
                                  border-radius:10px;padding:1rem;margin-top:0.75rem;">
                                 <div style="color:{color};font-size:1.2rem;font-weight:800;">Score: {score:.0f}/100</div>
-                                <div style="color:#e2e8f0;margin-top:0.5rem;line-height:1.6;">{result.get('feedback','')}</div>
+                                <div style="color:var(--text-primary);margin-top:0.5rem;line-height:1.6;">{result.get('feedback','')}</div>
                             </div>
                             """, unsafe_allow_html=True)
                             from src.database.supabase_client import award_xp
@@ -175,12 +175,12 @@ if today_challenge:
 st.markdown("### 📈 Quick Stats")
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 kpis = [
-    (c1, "🎯", "Interviews", str(total_interviews), "completed", "#6366f1"),
-    (c2, "💻", "Technical", f"{avg_technical:.0f}", "avg score", "#06b6d4"),
-    (c3, "🤝", "HR Score", f"{avg_hr:.0f}", "avg score", "#8b5cf6"),
-    (c4, "👨‍💻", "Coding", f"{avg_coding:.0f}", "avg score", "#22c55e"),
+    (c1, "gps_fixed", "Interviews", str(total_interviews), "completed", "#6366f1"),
+    (c2, "terminal", "Technical", f"{avg_technical:.0f}", "avg score", "#06b6d4"),
+    (c3, "handshake", "HR Score", f"{avg_hr:.0f}", "avg score", "#8b5cf6"),
+    (c4, "code", "Coding", f"{avg_coding:.0f}", "avg score", "#22c55e"),
     (c5, "🗣️", "Communication", f"{avg_comm:.0f}", "avg score", "#f59e0b"),
-    (c6, "💡", "Problems", str(problems_solved), "solved", "#ef4444"),
+    (c6, "lightbulb", "Problems", str(problems_solved), "solved", "#ef4444"),
 ]
 for col, icon, title, val, sub, color in kpis:
     with col:
@@ -267,20 +267,20 @@ with left:
             created = iv.get("created_at", "")
             st.markdown(f"""
             <div style="
-                background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+                background:var(--bg-card);border:1px solid var(--border);
                 border-radius:12px;padding:0.75rem 1rem;margin-bottom:0.5rem;
                 display:flex;align-items:center;justify-content:space-between;
             ">
                 <div>
-                    <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{iv_type}</span>
-                    <div style="color:#64748b;font-size:0.78rem;">{time_ago(created)}</div>
+                    <span style="color:var(--text-primary);font-weight:600;font-size:0.9rem;">{iv_type}</span>
+                    <div style="color:var(--text-muted);font-size:0.78rem;">{time_ago(created)}</div>
                 </div>
                 <span style="font-size:1.1rem;">{emoji}</span>
-                <span style="color:#6366f1;font-weight:700;">{score:.0f}<span style="color:#64748b;font-weight:400;">/100</span></span>
+                <span style="color:#6366f1;font-weight:700;">{score:.0f}<span style="color:var(--text-muted);font-weight:400;">/100</span></span>
             </div>
             """, unsafe_allow_html=True)
     else:
-        empty_state("🎯", "No interviews yet", "Start your first mock interview!", "Go to Mock Interview →")
+        empty_state("gps_fixed", "No interviews yet", "Start your first mock interview!", "Go to Mock Interview →")
 
 with right:
     st.markdown("**Weak Areas to Focus**")
@@ -301,11 +301,11 @@ with right:
             color = "#ef4444" if score < 50 else "#f59e0b"
             st.markdown(f"""
             <div style="
-                background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+                background:var(--bg-card);border:1px solid var(--border);
                 border-radius:10px;padding:0.6rem 1rem;margin-bottom:0.4rem;
                 display:flex;align-items:center;justify-content:space-between;
             ">
-                <span style="color:#f1f5f9;font-size:0.9rem;">📚 {domain}</span>
+                <span style="color:var(--text-primary);font-size:0.9rem;">📚 {domain}</span>
                 <div style="display:flex;align-items:center;gap:0.5rem;">
                     <div style="width:80px;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                         <div style="width:{score}%;height:100%;background:{color};border-radius:99px;"></div>
@@ -315,7 +315,7 @@ with right:
             </div>
             """, unsafe_allow_html=True)
     else:
-        empty_state("🎉", "Great job!", "No critical weak areas found. Keep practicing to maintain your scores!")
+        empty_state("celebration", "Great job!", "No critical weak areas found. Keep practicing to maintain your scores!")
 
     # Bookmarked questions
     if bookmarks:
@@ -324,7 +324,7 @@ with right:
             q_rows = db_select("interview_questions", {"id": bm.get("question_id", "")})
             if q_rows:
                 q = q_rows[0].get("question_text", "")[:80]
-                st.markdown(f'<div style="color:#94a3b8;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">📌 {q}...</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="color:var(--text-secondary);font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">📌 {q}...</div>', unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────
@@ -347,13 +347,13 @@ if achievements:
                 border-radius:12px;margin-bottom:0.5rem;
                 opacity:{'1' if earned else '0.4'};
             ">
-                <div style="font-size:1.6rem;">{a.get('icon','🏆')}</div>
+                <div style="font-size:1.6rem;">{a.get('icon','emoji_events')}</div>
                 <div style="color:{'#818cf8' if earned else '#64748b'};font-size:0.7rem;font-weight:600;margin-top:0.2rem;">{a['name']}</div>
                 <div style="color:#6366f1;font-size:0.65rem;">+{a['xp_reward']} XP</div>
             </div>
             """, unsafe_allow_html=True)
 else:
-    empty_state("🏅", "No achievements yet", "Complete interviews to earn badges and XP!", "Start practicing →")
+    empty_state("military_tech", "No achievements yet", "Complete interviews to earn badges and XP!", "Start practicing →")
 
 
 # ─────────────────────────────────────────────
@@ -374,7 +374,7 @@ if recommendations:
                     border-radius:12px;padding:1rem;text-align:center;
                 ">
                     <div style="color:#6366f1;font-weight:700;font-size:0.8rem;margin-bottom:0.4rem;">Week {week.get('week',i+1)}</div>
-                    <div style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{week.get('focus_topic','')}</div>
-                    <div style="color:#64748b;font-size:0.75rem;margin-top:0.3rem;">{week.get('expected_improvement','')[:60]}</div>
+                    <div style="color:var(--text-primary);font-weight:600;font-size:0.9rem;">{week.get('focus_topic','')}</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;margin-top:0.3rem;">{week.get('expected_improvement','')[:60]}</div>
                 </div>
                 """, unsafe_allow_html=True)

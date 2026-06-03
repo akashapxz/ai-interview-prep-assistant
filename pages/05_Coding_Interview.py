@@ -26,7 +26,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("Coding Interview Prep", "Practice LeetCode-style problems with AI evaluation, hints, and optimal solutions", "👨‍💻")
+page_header("Coding Interview Prep", "Practice LeetCode-style problems with AI evaluation, hints, and optimal solutions", "code")
 
 tabs = st.tabs(["💻 Practice", "📊 History", "🏆 Problem Bank"])
 
@@ -64,14 +64,14 @@ with tabs[0]:
         with col_prob:
             # Problem statement
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+            <div style="background:var(--bg-card);border:1px solid var(--border);
                  border-radius:14px;padding:1.5rem;height:100%;">
                 <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
-                    <h3 style="color:#f1f5f9;margin:0;">{problem.get('title','Problem')}</h3>
+                    <h3 style="color:var(--text-primary);margin:0;">{problem.get('title','Problem')}</h3>
                     {difficulty_badge(difficulty)}
                     {badge(topic, '#06b6d4')}
                 </div>
-                <div style="color:#e2e8f0;line-height:1.7;margin-bottom:1rem;">{problem.get('description','')}</div>
+                <div style="color:var(--text-primary);line-height:1.7;margin-bottom:1rem;">{problem.get('description','')}</div>
             """, unsafe_allow_html=True)
 
             # Examples
@@ -80,7 +80,7 @@ with tabs[0]:
                 <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:0.75rem;margin-bottom:0.5rem;font-family:JetBrains Mono,monospace;font-size:0.85rem;">
                     <div style="color:#06b6d4;"><strong>Input:</strong> {ex.get('input','')}</div>
                     <div style="color:#22c55e;"><strong>Output:</strong> {ex.get('output','')}</div>
-                    {f'<div style="color:#94a3b8;"><strong>Explanation:</strong> {ex.get("explanation","")}</div>' if ex.get('explanation') else ''}
+                    {f'<div style="color:var(--text-secondary);"><strong>Explanation:</strong> {ex.get("explanation","")}</div>' if ex.get('explanation') else ''}
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -88,7 +88,7 @@ with tabs[0]:
             if problem.get("constraints"):
                 st.markdown("**Constraints:**")
                 for c in problem["constraints"]:
-                    st.markdown(f'<div style="color:#94a3b8;font-size:0.85rem;">• {c}</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div style="color:var(--text-secondary);font-size:0.85rem;">• {c}</div>', unsafe_allow_html=True)
 
             st.markdown("</div>", unsafe_allow_html=True)
 
@@ -125,7 +125,7 @@ with tabs[0]:
             # Timer display
             if st.session_state.get("code_start_time"):
                 elapsed = int(time.time() - st.session_state["code_start_time"])
-                st.markdown(f'<div style="color:#64748b;font-size:0.8rem;text-align:right;">⏱️ Time: {format_duration(elapsed)}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="color:var(--text-muted);font-size:0.8rem;text-align:right;">⏱️ Time: {format_duration(elapsed)}</div>', unsafe_allow_html=True)
 
             sub_col1, sub_col2 = st.columns(2)
             with sub_col1:
@@ -140,7 +140,7 @@ with tabs[0]:
                     <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:0.75rem;margin-top:0.5rem;">
                         <div style="color:#4ade80;">⏱️ <strong>Time:</strong> {problem.get('time_complexity','O(?)')}</div>
                         <div style="color:#4ade80;">💾 <strong>Space:</strong> {problem.get('space_complexity','O(?)')}</div>
-                        <div style="color:#e2e8f0;margin-top:0.5rem;font-size:0.9rem;">{problem.get('approach_explanation','')}</div>
+                        <div style="color:var(--text-primary);margin-top:0.5rem;font-size:0.9rem;">{problem.get('approach_explanation','')}</div>
                     </div>
                     """, unsafe_allow_html=True)
 
@@ -191,10 +191,10 @@ with tabs[0]:
 
                 if ev.get("feedback"):
                     st.markdown(f"""
-                    <div style="background:rgba(255,255,255,0.04);border:1px solid {color}44;border-left:4px solid {color};
+                    <div style="background:var(--bg-card);border:1px solid {color}44;border-left:4px solid {color};
                          border-radius:12px;padding:1rem;margin:0.5rem 0;">
                         <div style="color:{color};font-weight:700;margin-bottom:0.4rem;">AI Feedback</div>
-                        <div style="color:#e2e8f0;line-height:1.65;">{ev.get("feedback","")}</div>
+                        <div style="color:var(--text-primary);line-height:1.65;">{ev.get("feedback","")}</div>
                     </div>
                     """, unsafe_allow_html=True)
 
@@ -205,7 +205,7 @@ with tabs[0]:
 
     else:
         if not gen_btn:
-            empty_state("👨‍💻", "Ready to Code", "Generate a problem to start your coding practice session!", "← Choose topic, difficulty, and language")
+            empty_state("code", "Ready to Code", "Generate a problem to start your coding practice session!", "← Choose topic, difficulty, and language")
 
 # ── TAB 2: History ────────────────────────────────────────────────────────────
 with tabs[1]:
@@ -216,12 +216,12 @@ with tabs[1]:
             status = sess.get("status", "attempted")
             status_color = "#22c55e" if status == "solved" else "#f59e0b" if status == "attempted" else "#ef4444"
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+            <div style="background:var(--bg-card);border:1px solid var(--border);
                  border-radius:12px;padding:0.75rem 1rem;margin-bottom:0.5rem;
                  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
                 <div>
-                    <span style="color:#f1f5f9;font-weight:600;">{sess.get('problem_title','Problem')}</span>
-                    <div style="color:#64748b;font-size:0.78rem;">{sess.get('topic','')} · {sess.get('difficulty','').title()} · {sess.get('language','')}</div>
+                    <span style="color:var(--text-primary);font-weight:600;">{sess.get('problem_title','Problem')}</span>
+                    <div style="color:var(--text-muted);font-size:0.78rem;">{sess.get('topic','')} · {sess.get('difficulty','').title()} · {sess.get('language','')}</div>
                 </div>
                 <div style="display:flex;align-items:center;gap:1rem;">
                     {difficulty_badge(sess.get('difficulty','medium'))}
@@ -231,7 +231,7 @@ with tabs[1]:
             </div>
             """, unsafe_allow_html=True)
     else:
-        empty_state("📊", "No coding sessions yet", "Practice a problem to see your history here!")
+        empty_state("dashboard", "No coding sessions yet", "Practice a problem to see your history here!")
 
 # ── TAB 3: Problem Bank ───────────────────────────────────────────────────────
 with tabs[2]:
@@ -239,7 +239,7 @@ with tabs[2]:
     topic_cols = st.columns(4)
     topics_with_icons = [
         ("Arrays", "📦"), ("Strings", "🔤"), ("Linked Lists", "🔗"), ("Trees", "🌳"),
-        ("Graphs", "🕸️"), ("Dynamic Programming", "🧮"), ("Sorting", "📊"), ("Hashing", "🔑"),
+        ("Graphs", "🕸️"), ("Dynamic Programming", "🧮"), ("Sorting", "dashboard"), ("Hashing", "key"),
     ]
     for i, (t, icon) in enumerate(topics_with_icons):
         with topic_cols[i % 4]:
@@ -265,7 +265,7 @@ with tabs[2]:
             color = "#22c55e" if pct >= 80 else "#f59e0b" if pct >= 50 else "#ef4444"
             st.markdown(f"""
             <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.4rem;">
-                <div style="width:140px;color:#e2e8f0;font-size:0.9rem;">{t}</div>
+                <div style="width:140px;color:var(--text-primary);font-size:0.9rem;">{t}</div>
                 <div style="flex:1;height:8px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                     <div style="width:{pct}%;height:100%;background:{color};border-radius:99px;"></div>
                 </div>

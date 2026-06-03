@@ -29,7 +29,7 @@ user_id = user["id"]
 page_header(
     "Leaderboard & Gamification",
     "Compete with peers, complete daily challenges, and earn XP badges",
-    "🏆",
+    "emoji_events",
 )
 
 # ── Current User Stats ────────────────────────────────────────────────────────
@@ -40,11 +40,11 @@ completed_challenges = len(db_select("user_daily_challenges", {"user_id": user_i
 st.markdown("### ⚡ Your Stats")
 c1, c2, c3 = st.columns(3)
 with c1:
-    st.markdown(kpi_card("⚡", "Your Total XP",   f"{user_xp:,} XP",           "rank points",   "#6366f1"), unsafe_allow_html=True)
+    st.markdown(kpi_card("bolt", "Your Total XP",   f"{user_xp:,} XP",           "rank points",   "#6366f1"), unsafe_allow_html=True)
 with c2:
-    st.markdown(kpi_card("🔥", "Practice Streak", f"{user_streak} Days",        "active streak", "#f59e0b"), unsafe_allow_html=True)
+    st.markdown(kpi_card("local_fire_department", "Practice Streak", f"{user_streak} Days",        "active streak", "#f59e0b"), unsafe_allow_html=True)
 with c3:
-    st.markdown(kpi_card("🎯", "Challenges Done",  str(completed_challenges),    "completed",     "#22c55e"), unsafe_allow_html=True)
+    st.markdown(kpi_card("gps_fixed", "Challenges Done",  str(completed_challenges),    "completed",     "#22c55e"), unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -71,14 +71,14 @@ if not challenge_row:
 if challenge_row:
     ch = challenge_row[0]
     st.markdown(f"""
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(99,102,241,0.25);
+    <div style="background:var(--bg-card);border:1px solid rgba(99,102,241,0.25);
          border-radius:14px;padding:1.25rem;margin-bottom:1.5rem;">
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
             {badge("Daily Challenge", "#6366f1")}
             {badge(ch.get("domain","General"), "#06b6d4")}
             {badge(ch.get("difficulty","medium").capitalize(), "#f59e0b")}
         </div>
-        <div style="color:#f1f5f9;font-weight:600;font-size:1rem;line-height:1.6;">
+        <div style="color:var(--text-primary);font-weight:600;font-size:1rem;line-height:1.6;">
             {ch["question"]}
         </div>
     </div>
@@ -164,7 +164,7 @@ if profiles_list:
              display:flex;justify-content:space-between;align-items:center;">
             <div style="display:flex;align-items:center;gap:0.75rem;">
                 <span style="font-size:1.2rem;width:2rem;text-align:center;">{medal}</span>
-                <span style="color:#f1f5f9;font-weight:{'700' if is_me else '500'};">
+                <span style="color:var(--text-primary);font-weight:{'700' if is_me else '500'};">
                     {p.get('full_name','Anonymous')}
                     {'&nbsp;<span style="color:#818cf8;font-size:0.75rem;">(You)</span>' if is_me else ''}
                 </span>
@@ -174,7 +174,7 @@ if profiles_list:
         """, unsafe_allow_html=True)
 else:
     empty_state(
-        "🏆", "No Rankings Yet",
+        "emoji_events", "No Rankings Yet",
         "Rankings appear here once users complete interviews and earn XP.",
     )
 
@@ -195,12 +195,12 @@ if all_achievements:
         opacity = "1" if earned else "0.35"
         with cols[i % 4]:
             st.markdown(f"""
-            <div style="background:rgba(255,255,255,0.04);border:1px solid {'rgba(99,102,241,0.4)' if earned else 'rgba(255,255,255,0.06)'};
+            <div style="background:var(--bg-card);border:1px solid {'rgba(99,102,241,0.4)' if earned else 'rgba(255,255,255,0.06)'};
                  border-radius:14px;padding:1rem;text-align:center;opacity:{opacity};
                  transition:all 0.3s ease;margin-bottom:0.75rem;">
-                <div style="font-size:2rem;margin-bottom:0.4rem;">{ach.get('icon','🏆')}</div>
-                <div style="color:#f1f5f9;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem;">{ach['name']}</div>
-                <div style="color:#64748b;font-size:0.75rem;line-height:1.4;">{ach['description']}</div>
+                <div style="font-size:2rem;margin-bottom:0.4rem;">{ach.get('icon','emoji_events')}</div>
+                <div style="color:var(--text-primary);font-weight:700;font-size:0.85rem;margin-bottom:0.3rem;">{ach['name']}</div>
+                <div style="color:var(--text-muted);font-size:0.75rem;line-height:1.4;">{ach['description']}</div>
                 <div style="color:#6366f1;font-size:0.75rem;font-weight:700;margin-top:0.5rem;">
                     {'✅ Earned' if earned else f'⚡ {ach.get("xp_reward",50)} XP'}
                 </div>

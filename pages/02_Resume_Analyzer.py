@@ -29,7 +29,7 @@ user = get_current_user()
 profile = get_current_profile()
 user_id = user["id"]
 
-page_header("Resume Analyzer", "AI-powered resume analysis with ATS scoring and interview question generation", "📄")
+page_header("Resume Analyzer", "AI-powered resume analysis with ATS scoring and interview question generation", "description")
 
 tabs = st.tabs(["📤 Upload & Analyze", "📋 Past Resumes", "🎯 Interview Questions"])
 
@@ -110,21 +110,21 @@ with tabs[0]:
                     with sc1:
                         ats = result.get("ats_score", 0)
                         color = "#22c55e" if ats >= 75 else "#f59e0b" if ats >= 50 else "#ef4444"
-                        st.markdown(kpi_card("🤖", "ATS Score", f"{ats}", "Applicant Tracking System", color), unsafe_allow_html=True)
+                        st.markdown(kpi_card("smart_toy", "ATS Score", f"{ats}", "Applicant Tracking System", color), unsafe_allow_html=True)
                     with sc2:
                         rdy = result.get("readiness_score", 0)
                         color2 = "#22c55e" if rdy >= 75 else "#f59e0b" if rdy >= 50 else "#ef4444"
-                        st.markdown(kpi_card("🎯", "Readiness Score", f"{rdy}", "Interview Ready", color2), unsafe_allow_html=True)
+                        st.markdown(kpi_card("gps_fixed", "Readiness Score", f"{rdy}", "Interview Ready", color2), unsafe_allow_html=True)
                     with sc3:
                         skill_count = len(result.get("skills", []))
-                        st.markdown(kpi_card("⚡", "Skills Found", str(skill_count), "detected skills", "#6366f1"), unsafe_allow_html=True)
+                        st.markdown(kpi_card("bolt", "Skills Found", str(skill_count), "detected skills", "#6366f1"), unsafe_allow_html=True)
 
                     st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
 
                     # Summary
                     if result.get("summary"):
                         st.markdown("**📝 Professional Summary**")
-                        st.markdown(f'<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:1rem;color:#e2e8f0;line-height:1.7;">{result["summary"]}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:1rem;color:var(--text-primary);line-height:1.7;">{result["summary"]}</div>', unsafe_allow_html=True)
                         st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
 
                     col_l, col_r = st.columns(2)
@@ -161,18 +161,18 @@ with tabs[0]:
                             st.markdown("**Education**")
                             for edu in result.get("education", []):
                                 st.markdown(f"""
-                                <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:0.6rem;margin-bottom:0.4rem;">
-                                    <div style="color:#f1f5f9;font-weight:600;">{edu.get('degree','')}</div>
-                                    <div style="color:#94a3b8;font-size:0.85rem;">{edu.get('institution','')} · {edu.get('year','')}</div>
+                                <div style="background:var(--bg-card);border-radius:8px;padding:0.6rem;margin-bottom:0.4rem;">
+                                    <div style="color:var(--text-primary);font-weight:600;">{edu.get('degree','')}</div>
+                                    <div style="color:var(--text-secondary);font-size:0.85rem;">{edu.get('institution','')} · {edu.get('year','')}</div>
                                 </div>
                                 """, unsafe_allow_html=True)
                         with exp_col:
                             st.markdown("**Experience**")
                             for exp in result.get("experience", []):
                                 st.markdown(f"""
-                                <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:0.6rem;margin-bottom:0.4rem;">
-                                    <div style="color:#f1f5f9;font-weight:600;">{exp.get('role','')}</div>
-                                    <div style="color:#94a3b8;font-size:0.85rem;">{exp.get('company','')} · {exp.get('duration','')}</div>
+                                <div style="background:var(--bg-card);border-radius:8px;padding:0.6rem;margin-bottom:0.4rem;">
+                                    <div style="color:var(--text-primary);font-weight:600;">{exp.get('role','')}</div>
+                                    <div style="color:var(--text-secondary);font-size:0.85rem;">{exp.get('company','')} · {exp.get('duration','')}</div>
                                 </div>
                                 """, unsafe_allow_html=True)
 
@@ -188,7 +188,7 @@ with tabs[0]:
                     )
 
     elif not uploaded_file:
-        empty_state("📄", "Upload Your Resume", "Support for PDF, DOCX, and TXT files up to 10MB", "👆 Drag & drop or click to browse")
+        empty_state("description", "Upload Your Resume", "Support for PDF, DOCX, and TXT files up to 10MB", "👆 Drag & drop or click to browse")
 
     # Show cached result if available
     elif uploaded_file and not analyze_btn:
@@ -211,7 +211,7 @@ with tabs[1]:
                     skills_html = " ".join(badge(s) for s in (r["skills"] or [])[:15])
                     st.markdown(skills_html, unsafe_allow_html=True)
     else:
-        empty_state("📋", "No resumes yet", "Upload your first resume above to get started!")
+        empty_state("assignment", "No resumes yet", "Upload your first resume above to get started!")
 
 
 # ── TAB 3: Interview Questions ────────────────────────────────────────────────
@@ -222,12 +222,12 @@ with tabs[2]:
         for i, q in enumerate(result_cached["interview_questions"], 1):
             st.markdown(f"""
             <div style="
-                background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+                background:var(--bg-card);border:1px solid var(--border);
                 border-radius:12px;padding:1rem;margin-bottom:0.75rem;
             ">
                 <div style="color:#818cf8;font-size:0.8rem;font-weight:600;margin-bottom:0.3rem;">QUESTION {i}</div>
-                <div style="color:#f1f5f9;line-height:1.6;">{q}</div>
+                <div style="color:var(--text-primary);line-height:1.6;">{q}</div>
             </div>
             """, unsafe_allow_html=True)
     else:
-        empty_state("💬", "No questions yet", "Analyze a resume first to generate personalized interview questions.")
+        empty_state("forum", "No questions yet", "Analyze a resume first to generate personalized interview questions.")

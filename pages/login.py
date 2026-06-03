@@ -10,7 +10,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from src.auth.supabase_auth import sign_in, sign_up, reset_password, get_google_oauth_url
-from src.components.ui_components import inject_global_css
+from src.components.ui_components import inject_global_css, mi
 
 # Inject global styles
 inject_global_css()
@@ -29,8 +29,7 @@ st.markdown(clean_html("""
 /* Full-page hero gradient background */
 [data-testid="stAppViewContainer"] {
     background: radial-gradient(ellipse at 50% 15%, rgba(99,102,241,0.15) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%),
-                #0a0a0f !important;
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%) !important;
 }
 
 /* Hide sidebar on login page */
@@ -53,8 +52,8 @@ st.markdown(clean_html("""
 
 /* Style the tabs container as the premium card */
 .stTabs {
-    background: rgba(255,255,255,0.03) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
     border-radius: 24px !important;
     padding: 2.5rem !important;
     width: 100% !important;
@@ -74,9 +73,9 @@ st.markdown(clean_html("""
 
 /* Auth tab strip */
 .auth-tab-strip [data-baseweb="tab-list"] {
-    background: rgba(255,255,255,0.04) !important;
+    background: var(--bg-card) !important;
     border-radius: 12px !important;
-    border: 1px solid rgba(255,255,255,0.07) !important;
+    border: 1px solid var(--border) !important;
     padding: 4px !important;
     gap: 4px !important;
 }
@@ -86,10 +85,10 @@ st.markdown(clean_html("""
 }
 
 /* Input label colour */
-label { color: #94a3b8 !important; font-size: 0.85rem !important; font-weight: 500 !important; }
+label { color: var(--text-secondary) !important; font-size: 0.85rem !important; font-weight: 500 !important; }
 
 /* Remove red borders from required inputs */
-.stTextInput > div > div > input { border-color: rgba(255,255,255,0.1) !important; }
+.stTextInput > div > div > input { border-color: var(--border) !important; }
 </style>
 """), unsafe_allow_html=True)
 
@@ -105,20 +104,20 @@ st.markdown(clean_html("""
             font-size:0.92rem;color:#818cf8;font-weight:600;width:fit-content;
             backdrop-filter: blur(10px);
         ">
-            🎯 &nbsp;AI Interview Prep
+            <span class="material-symbols-outlined" style="font-size:1.1rem;vertical-align:middle;">target</span> &nbsp;AI Interview Prep
         </div>
 
         <!-- Hero heading -->
         <h1 style="
             font-size:clamp(2.2rem, 5vw, 3.4rem);font-weight:900;
             line-height:1.15;margin:0 auto 1.2rem;text-align:center;
-            background:linear-gradient(135deg,#f1f5f9 0%,#a5b4fc 55%,#38bdf8 100%);
+            background:linear-gradient(135deg, var(--text-heading) 0%,#a5b4fc 55%,#38bdf8 100%);
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;
         ">
             Ace Every Interview with AI
         </h1>
 
-        <p style="color:#94a3b8;font-size:1.1rem;line-height:1.65;margin:0 auto 2.5rem;max-width:560px;text-align:center;">
+        <p style="color:var(--text-secondary);font-size:1.1rem;line-height:1.65;margin:0 auto 2.5rem;max-width:560px;text-align:center;">
             The most advanced AI platform for interview preparation — mock interviews, resume analysis, coding practice, and personalised learning.
         </p>
 
@@ -131,32 +130,32 @@ st.markdown(clean_html("""
             text-align: left;
             width: 100%;
         ">
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
-                <div style="width:34px;height:34px;border-radius:8px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🤖</div>
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:34px;height:34px;border-radius:8px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:1.1rem;color:#818cf8;">smart_toy</span></div>
                 <div>
-                    <div style="color:#f1f5f9;font-size:0.88rem;font-weight:600;">AI Mock Interviews</div>
-                    <div style="color:#64748b;font-size:0.75rem;">Realistic FAANG, HR & tech sessions</div>
+                    <div style="color:var(--text-primary);font-size:0.88rem;font-weight:600;">AI Mock Interviews</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;">Realistic FAANG, HR & tech sessions</div>
                 </div>
             </div>
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
-                <div style="width:34px;height:34px;border-radius:8px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">📄</div>
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:34px;height:34px;border-radius:8px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.25);display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:1.1rem;color:#06b6d4;">description</span></div>
                 <div>
-                    <div style="color:#f1f5f9;font-size:0.88rem;font-weight:600;">Resume Analyzer</div>
-                    <div style="color:#64748b;font-size:0.75rem;">ATS scoring & feedback tips</div>
+                    <div style="color:var(--text-primary);font-size:0.88rem;font-weight:600;">Resume Analyzer</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;">ATS scoring & feedback tips</div>
                 </div>
             </div>
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
-                <div style="width:34px;height:34px;border-radius:8px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">💻</div>
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:34px;height:34px;border-radius:8px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:1.1rem;color:#8b5cf6;">code</span></div>
                 <div>
-                    <div style="color:#f1f5f9;font-size:0.88rem;font-weight:600;">Coding Practice</div>
-                    <div style="color:#64748b;font-size:0.75rem;">LeetCode challenges with AI grading</div>
+                    <div style="color:var(--text-primary);font-size:0.88rem;font-weight:600;">Coding Practice</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;">LeetCode challenges with AI grading</div>
                 </div>
             </div>
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
-                <div style="width:34px;height:34px;border-radius:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🎙️</div>
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:34px;height:34px;border-radius:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:1.1rem;color:#22c55e;">mic</span></div>
                 <div>
-                    <div style="color:#f1f5f9;font-size:0.88rem;font-weight:600;">Voice Interviews</div>
-                    <div style="color:#64748b;font-size:0.75rem;">Speech analysis & filler-word detection</div>
+                    <div style="color:var(--text-primary);font-size:0.88rem;font-weight:600;">Voice Interviews</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;">Speech analysis & filler-word detection</div>
                 </div>
             </div>
         </div>
@@ -168,14 +167,14 @@ st.markdown(clean_html("""
 # Header above the card
 st.markdown(clean_html("""
     <div style="text-align:center;margin-bottom:1.5rem;width:100%;">
-        <div style="font-size:2.5rem;margin-bottom:0.4rem;">🔐</div>
-        <div style="color:#f1f5f9;font-size:1.35rem;font-weight:700;">Welcome back</div>
-        <div style="color:#64748b;font-size:0.88rem;margin-top:0.2rem;">Sign in to continue your prep journey</div>
+        <div style="margin-bottom:0.4rem;"><span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--primary);">lock</span></div>
+        <div style="color:var(--text-primary);font-size:1.35rem;font-weight:700;">Welcome back</div>
+        <div style="color:var(--text-muted);font-size:0.88rem;margin-top:0.2rem;">Sign in to continue your prep journey</div>
     </div>
 """), unsafe_allow_html=True)
 
 # Tabs (styled directly as the card using CSS .stTabs rule)
-tab_login, tab_signup, tab_reset = st.tabs(["🔐 Login", "✨ Sign Up", "🔑 Reset"])
+tab_login, tab_signup, tab_reset = st.tabs(["Login", "Sign Up", "Reset"])
 
 # ── LOGIN ──────────────────────────────────────────────────────────────────
 with tab_login:
@@ -188,7 +187,7 @@ with tab_login:
         remember = st.checkbox("Remember me", key="login_remember")
 
     st.markdown("<div style='height:0.25rem'></div>", unsafe_allow_html=True)
-    if st.button("🚀 Sign In", use_container_width=True, key="btn_login", type="primary"):
+    if st.button("Sign In", use_container_width=True, key="btn_login", type="primary", icon=":material/login:"):
         if not email or not password:
             st.error("Please fill in both fields.")
         else:
@@ -202,7 +201,7 @@ with tab_login:
             else:
                 st.error(msg)
 
-    st.markdown("<div style='text-align:center;color:#475569;font-size:0.8rem;margin:0.9rem 0;'>— or continue with —</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center;color:var(--text-muted);font-size:0.8rem;margin:0.9rem 0;'>— or continue with —</div>", unsafe_allow_html=True)
     # Pre-generate the URL and PKCE code verifier on page load
     url, code_verifier = get_google_oauth_url()
     
@@ -211,7 +210,7 @@ with tab_login:
         if code_verifier:
             import time
             st.markdown(f'<img src="cookie-set-{time.time()}" onerror="document.cookie=\'pkce_code_verifier={code_verifier}; path=/; max-age=300; SameSite=Lax\';" style="display:none;"/>', unsafe_allow_html=True)
-        st.link_button("🔵 Continue with Google", url, use_container_width=True)
+        st.link_button("Continue with Google", url, use_container_width=True, icon=":material/g_mobiledata:")
     else:
         st.warning("Google OAuth not configured. Add GOOGLE_CLIENT_ID to .env")
 
@@ -239,7 +238,7 @@ with tab_signup:
     grad_year = st.number_input("Graduation Year", min_value=2020, max_value=2032, value=2025, key="su_year")
 
     st.markdown("<div style='height:0.25rem'></div>", unsafe_allow_html=True)
-    if st.button("🎯 Create Account", use_container_width=True, key="btn_signup", type="primary"):
+    if st.button("Create Account", use_container_width=True, key="btn_signup", type="primary", icon=":material/person_add:"):
         if not all([full_name, su_email, su_pass, college, branch]):
             st.error("Please fill in all required fields.")
         elif su_pass != su_pass2:
@@ -251,16 +250,16 @@ with tab_signup:
                 success, msg = sign_up(su_email, su_pass, full_name, college, branch, grad_year)
             if success:
                 st.success(msg)
-                st.info("📧 Check your email to verify your account, then log in.")
+                st.info("Check your email to verify your account, then log in.")
             else:
                 st.error(msg)
 
 # ── PASSWORD RESET ─────────────────────────────────────────────────────────
 with tab_reset:
     st.markdown("<div style='height:0.6rem'></div>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8;font-size:0.85rem;margin-bottom:1rem;'>Enter your email and we'll send a link to reset your password.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:var(--text-secondary);font-size:0.85rem;margin-bottom:1rem;'>Enter your email and we'll send a link to reset your password.</p>", unsafe_allow_html=True)
     reset_email = st.text_input("Email address", placeholder="your@email.com", key="reset_email")
-    if st.button("📧 Send Reset Link", use_container_width=True, key="btn_reset", type="primary"):
+    if st.button("Send Reset Link", use_container_width=True, key="btn_reset", type="primary", icon=":material/mail:"):
         if not reset_email:
             st.error("Please enter your email address.")
         else:
@@ -273,7 +272,7 @@ with tab_reset:
 
 # Footer note below the card
 st.markdown(clean_html("""
-    <div style="text-align:center;margin-top:1.5rem;color:#334155;font-size:0.75rem;width:100%;">
+    <div style="text-align:center;margin-top:1.5rem;color:var(--text-muted);font-size:0.75rem;width:100%;">
         By signing up you agree to our Terms of Service &amp; Privacy Policy
     </div>
 """), unsafe_allow_html=True)
