@@ -6,7 +6,7 @@ A comprehensive, production-quality AI-powered web application built using **Str
 
 ## ⚡ Main Features
 
-1. **Authentication System (Supabase Auth)**: Secure Signup, Login, Password Reset, and session persistence.
+1. **Authentication System (Supabase Auth)**: Secure Signup, Login, Password Reset, Google OAuth (Google Sign-In) with server-side PKCE verifier fallback logic to bypass iframe cookie/sandbox restrictions, and session persistence.
 2. **Dashboard Performance Tracker**: Beautiful Plotly metrics showing averages, trend lines, skill radar competency, and a weekly activity calendar.
 3. **Resume Analyzer (ATS Checker)**: PDF/DOCX resume scanner that computes ATS scores, identifies strengths/gaps, extracts skills, generates matching questions, and exports professional PDF reports.
 4. **Technical Interview Engine**: Practice domain questions (OOP, DBMS, OS, DSA, ML, Cloud, Cybersecurity, DevOps) with strict AI grading metrics.
@@ -98,7 +98,13 @@ SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_KEY=your-service-role-key
 GEMINI_API_KEY=your-gemini-api-key
 GROQ_API_KEY=your-groq-api-key
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
+
+> [!NOTE]
+> A detailed step-by-step walkthrough for Google Cloud Console and Supabase OAuth dashboard setup can be found in the [Google OAuth Setup Guide](google_oauth_guide.md).
+
 
 ### 3. Setup Database Schema
 1. Log in to your **Supabase Console**.
