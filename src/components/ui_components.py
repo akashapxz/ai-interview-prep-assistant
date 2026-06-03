@@ -31,7 +31,7 @@ def inject_global_css():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-    .stApp {
+    [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stApp {
         --primary: var(--primary-color, #6366f1);
         --primary-dark: var(--primary-color, #4f46e5);
         --primary-light: color-mix(in srgb, var(--primary) 75%, var(--text-color, #f1f5f9));
@@ -65,6 +65,48 @@ def inject_global_css():
         --divider: color-mix(in srgb, var(--text-color, #ffffff) 10%, transparent);
         --score-track: color-mix(in srgb, var(--text-color, #ffffff) 6%, transparent);
     }
+
+    /* Light Theme Overrides */
+    @media (prefers-color-scheme: light) {
+        [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stApp {
+            --primary-light: color-mix(in srgb, var(--primary) 75%, var(--text-color, #0f172a));
+            --bg-base: var(--background-color, #ffffff);
+            --bg-card: var(--secondary-background-color, #f8fafc);
+            --bg-card-hover: color-mix(in srgb, var(--text-color, #000000) 4%, var(--secondary-background-color, #f8fafc));
+            --border: color-mix(in srgb, var(--text-color, #000000) 8%, transparent);
+            
+            --text-primary: var(--text-color, #0f172a);
+            --text-secondary: color-mix(in srgb, var(--text-color, #0f172a) 70%, transparent);
+            --text-muted: color-mix(in srgb, var(--text-color, #0f172a) 50%, transparent);
+            --text-heading: var(--text-color, #0f172a);
+            
+            --code-bg: color-mix(in srgb, var(--text-color, #000000) 5%, transparent);
+            --sidebar-bg: var(--secondary-background-color, #f8fafc);
+            --divider: color-mix(in srgb, var(--text-color, #000000) 10%, transparent);
+            --score-track: color-mix(in srgb, var(--text-color, #000000) 6%, transparent);
+        }
+    }
+
+    [data-theme="light"] [data-testid="stAppViewContainer"], 
+    [data-theme="light"] [data-testid="stSidebar"], 
+    [data-theme="light"] .stApp {
+        --primary-light: color-mix(in srgb, var(--primary) 75%, var(--text-color, #0f172a));
+        --bg-base: var(--background-color, #ffffff) !important;
+        --bg-card: var(--secondary-background-color, #f8fafc) !important;
+        --bg-card-hover: color-mix(in srgb, var(--text-color, #000000) 4%, var(--secondary-background-color, #f8fafc)) !important;
+        --border: color-mix(in srgb, var(--text-color, #000000) 8%, transparent) !important;
+        
+        --text-primary: var(--text-color, #0f172a) !important;
+        --text-secondary: color-mix(in srgb, var(--text-color, #0f172a) 70%, transparent) !important;
+        --text-muted: color-mix(in srgb, var(--text-color, #0f172a) 50%, transparent) !important;
+        --text-heading: var(--text-color, #0f172a) !important;
+        
+        --code-bg: color-mix(in srgb, var(--text-color, #000000) 5%, transparent) !important;
+        --sidebar-bg: var(--secondary-background-color, #f8fafc) !important;
+        --divider: color-mix(in srgb, var(--text-color, #000000) 10%, transparent) !important;
+        --score-track: color-mix(in srgb, var(--text-color, #000000) 6%, transparent) !important;
+    }
+
     * { box-sizing: border-box; }
     [data-testid="stAppViewContainer"] {
         background: var(--bg-base) !important;
@@ -210,13 +252,38 @@ def inject_global_css():
     <script>
     (function(){
         function detectTheme(){
-            var el = document.querySelector('[data-testid="stAppViewContainer"]');
-            if(!el) return;
-            var bg = getComputedStyle(el).backgroundColor;
-            var m = bg.match(/(\\d+)/g);
-            if(m && m.length >= 3){
-                var lum = (parseInt(m[0])*299 + parseInt(m[1])*587 + parseInt(m[2])*114)/1000;
-                document.documentElement.setAttribute('data-theme', lum > 128 ? 'light' : 'dark');
+            var root = document.documentElement;
+            var app = document.querySelector('.stApp');
+            var bgVar = '';
+            if (app) bgVar = getComputedStyle(app).getPropertyValue('--background-color').trim();
+            if (!bgVar) bgVar = getComputedStyle(root).getPropertyValue('--background-color').trim();
+            
+            if (bgVar) {
+                var isLight = false;
+                if (bgVar.startsWith('#')) {
+                    var hex = bgVar.replace('#', '');
+                    if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+                    var r = parseInt(hex.substring(0,2), 16);
+                    var g = parseInt(hex.substring(2,4), 16);
+                    var b = parseInt(hex.substring(4,6), 16);
+                    isLight = ((r*299 + g*587 + b*114)/1000) > 128;
+                } else {
+                    var m = bgVar.match(/(\\d+)/g);
+                    if (m && m.length >= 3) {
+                        isLight = ((parseInt(m[0])*299 + parseInt(m[1])*587 + parseInt(m[2])*114)/1000) > 128;
+                    }
+                }
+                root.setAttribute('data-theme', isLight ? 'light' : 'dark');
+                return;
+            }
+            
+            var bg = getComputedStyle(document.body).backgroundColor;
+            if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+                var m = bg.match(/(\\d+)/g);
+                if(m && m.length >= 3){
+                    var lum = (parseInt(m[0])*299 + parseInt(m[1])*587 + parseInt(m[2])*114)/1000;
+                    root.setAttribute('data-theme', lum > 128 ? 'light' : 'dark');
+                }
             }
         }
         new MutationObserver(detectTheme).observe(document.body, {attributes:true,childList:true,subtree:true});
