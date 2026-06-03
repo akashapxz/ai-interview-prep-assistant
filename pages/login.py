@@ -101,7 +101,7 @@ st.html(clean_html("""
             display:inline-flex;align-items:center;gap:0.6rem;
             background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);
             border-radius:99px;padding:0.55rem 1.4rem;margin-bottom:2rem;
-            font-size:0.92rem;color:#818cf8;font-weight:600;width:fit-content;
+            font-size:0.92rem;color:var(--primary-light);font-weight:600;width:fit-content;
             backdrop-filter: blur(10px);
         ">
             <span class="material-symbols-outlined" style="font-size:1.1rem;vertical-align:middle;">target</span> &nbsp;AI Interview Prep
@@ -131,7 +131,7 @@ st.html(clean_html("""
             width: 100%;
         ">
             <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.75rem;">
-                <div style="width:34px;height:34px;border-radius:8px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:1.1rem;color:#818cf8;">smart_toy</span></div>
+                <div style="width:34px;height:34px;border-radius:8px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:1.1rem;color:var(--primary-light);">smart_toy</span></div>
                 <div>
                     <div style="color:var(--text-primary);font-size:0.88rem;font-weight:600;">AI Mock Interviews</div>
                     <div style="color:var(--text-muted);font-size:0.75rem;">Realistic FAANG, HR & tech sessions</div>

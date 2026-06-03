@@ -34,7 +34,7 @@ st.markdown("""
      border:1px solid rgba(99,102,241,0.25);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;">
     <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
         <span style="font-size:1.2rem;">⭐</span>
-        <span style="color:#818cf8;font-weight:700;">STAR Method Guide</span>
+        <span style="color:var(--primary-light);font-weight:700;">STAR Method Guide</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
         <div><span style="color:#6366f1;font-weight:700;">S</span><span style="color:var(--text-primary);"> — Situation</span><br><span style="color:var(--text-muted);font-size:0.8rem;">Set the scene and context</span></div>

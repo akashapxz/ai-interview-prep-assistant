@@ -225,7 +225,7 @@ with tabs[2]:
                 background:var(--bg-card);border:1px solid var(--border);
                 border-radius:12px;padding:1rem;margin-bottom:0.75rem;
             ">
-                <div style="color:#818cf8;font-size:0.8rem;font-weight:600;margin-bottom:0.3rem;">QUESTION {i}</div>
+                <div style="color:var(--primary-light);font-size:0.8rem;font-weight:600;margin-bottom:0.3rem;">QUESTION {i}</div>
                 <div style="color:var(--text-primary);line-height:1.6;">{q}</div>
             </div>
             """, unsafe_allow_html=True)

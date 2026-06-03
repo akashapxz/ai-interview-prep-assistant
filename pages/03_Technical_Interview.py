@@ -46,7 +46,7 @@ latest_resume = db_select("resumes", {"user_id": user_id}, order="created_at.des
 skills_str = ""
 if latest_resume and latest_resume[0].get("skills"):
     skills_str = ", ".join(latest_resume[0]["skills"][:10])
-    st.markdown(f'<div style="color:var(--text-muted);font-size:0.85rem;">📄 Using skills from your resume: <span style="color:#818cf8;">{skills_str[:80]}...</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:var(--text-muted);font-size:0.85rem;">📄 Using skills from your resume: <span style="color:var(--primary-light);">{skills_str[:80]}...</span></div>', unsafe_allow_html=True)
 
 gen_btn = st.button("🚀 Generate Questions", type="primary", use_container_width=False, key="gen_tech_btn")
 

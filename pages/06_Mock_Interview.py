@@ -69,7 +69,7 @@ if not st.session_state.get("mock_active") and not st.session_state.get("mock_co
     st.markdown(f"""
     <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);
          border-radius:14px;padding:1.25rem;margin:1rem 0;">
-        <div style="color:#818cf8;font-weight:700;margin-bottom:0.5rem;">Interview Preview</div>
+        <div style="color:var(--primary-light);font-weight:700;margin-bottom:0.5rem;">Interview Preview</div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;">
             <div><span style="color:var(--text-muted);font-size:0.8rem;">Type</span><br><span style="color:var(--text-primary);font-weight:600;">{interview_type}</span></div>
             <div><span style="color:var(--text-muted);font-size:0.8rem;">Persona</span><br><span style="color:var(--text-primary);font-weight:600;">{persona}</span></div>
@@ -146,7 +146,7 @@ elif st.session_state.get("mock_active") and not st.session_state.get("mock_comp
                      display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🤖</div>
                 <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);
                      border-radius:12px 12px 12px 4px;padding:0.75rem 1rem;flex:1;">
-                    <div style="color:#818cf8;font-size:0.75rem;font-weight:600;margin-bottom:0.3rem;">{persona.upper()}</div>
+                    <div style="color:var(--primary-light);font-size:0.75rem;font-weight:600;margin-bottom:0.3rem;">{persona.upper()}</div>
                     <div style="color:var(--text-primary);line-height:1.6;">{qa.get('question','')}</div>
                 </div>
             </div>
@@ -198,7 +198,7 @@ elif st.session_state.get("mock_active") and not st.session_state.get("mock_comp
         <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);
              border-radius:12px 12px 12px 4px;padding:1rem 1.25rem;flex:1;
              animation:fadeInUp 0.4s ease;">
-            <div style="color:#818cf8;font-size:0.75rem;font-weight:600;margin-bottom:0.4rem;">{persona.upper()} · Q{current_q+1}/{total_q}</div>
+            <div style="color:var(--primary-light);font-size:0.75rem;font-weight:600;margin-bottom:0.4rem;">{persona.upper()} · Q{current_q+1}/{total_q}</div>
             <div style="color:var(--text-primary);font-size:1rem;line-height:1.65;">{current_question}</div>
         </div>
     </div>
@@ -292,7 +292,7 @@ elif st.session_state.get("mock_complete"):
              border:1px solid rgba(99,102,241,0.3);border-radius:20px;padding:2rem;text-align:center;margin-bottom:2rem;">
             <div style="font-size:3.5rem;margin-bottom:0.5rem;">{emoji}</div>
             <div style="font-size:3.5rem;font-weight:900;color:#6366f1;line-height:1;">{overall:.0f}<span style="font-size:1.5rem;color:var(--text-secondary);">/100</span></div>
-            <div style="color:#818cf8;font-size:1.1rem;font-weight:600;margin:0.5rem 0;">{readiness}</div>
+            <div style="color:var(--primary-light);font-size:1.1rem;font-weight:600;margin:0.5rem 0;">{readiness}</div>
             <div style="color:var(--text-muted);">Duration: {duration} min · {len(qa_list)} questions answered</div>
         </div>
         """, unsafe_allow_html=True)
@@ -353,7 +353,7 @@ elif st.session_state.get("mock_complete"):
         if report.get("next_steps"):
             st.markdown("**🗺️ Next Steps**")
             for i, step in enumerate(report["next_steps"], 1):
-                st.markdown(f'<div style="color:#818cf8;padding:0.2rem 0;">{i}. {step}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="color:var(--primary-light);padding:0.2rem 0;">{i}. {step}</div>', unsafe_allow_html=True)
 
         # Download PDF
         st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)

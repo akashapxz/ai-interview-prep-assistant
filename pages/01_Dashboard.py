@@ -90,7 +90,7 @@ if today_challenge:
             padding:1rem 1.5rem;
             animation:fadeInUp 0.5s ease;
         ">
-            <span style="color:#818cf8;font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;">⚡ Daily Challenge · {ch.get('category','General').title()}</span>
+            <span style="color:var(--primary-light);font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;">⚡ Daily Challenge · {ch.get('category','General').title()}</span>
             <p style="color:var(--text-primary);margin:0.4rem 0 0;font-size:0.95rem;line-height:1.6;">{ch['question'][:180]}{'...' if len(ch['question']) > 180 else ''}</p>
         </div>
         """, unsafe_allow_html=True)
@@ -200,8 +200,8 @@ with cols[0]:
     <div style="text-align:center;margin-top:-1rem;">
         <span style="
             background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);
-            border-radius:99px;padding:0.4rem 1.2rem;font-size:0.9rem;color:#818cf8;font-weight:600;
-        ">{mi('check_circle' if readiness >= 85 else 'info' if readiness >= 70 else 'pending' if readiness >= 50 else 'warning', '1.1rem', '#818cf8')} &nbsp;{readiness_label(readiness)}</span>
+            border-radius:99px;padding:0.4rem 1.2rem;font-size:0.9rem;color:var(--primary-light);font-weight:600;
+        ">{mi('check_circle' if readiness >= 85 else 'info' if readiness >= 70 else 'pending' if readiness >= 50 else 'warning', '1.1rem', 'var(--primary-light)')} &nbsp;{readiness_label(readiness)}</span>
     </div>
     """, unsafe_allow_html=True)
 

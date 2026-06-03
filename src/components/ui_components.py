@@ -34,7 +34,7 @@ def inject_global_css():
     :root {
         --primary: var(--primary-color, #6366f1);
         --primary-dark: var(--primary-color, #4f46e5);
-        --primary-light: var(--primary-color, #818cf8);
+        --primary-light: color-mix(in srgb, var(--primary) 75%, var(--text-color, #f1f5f9));
         --secondary: #8b5cf6;
         --accent: #06b6d4;
         --accent2: #a78bfa;
