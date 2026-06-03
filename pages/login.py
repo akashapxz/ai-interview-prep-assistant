@@ -24,7 +24,7 @@ def clean_html(html_str: str) -> str:
 
 
 # ── Extra premium login-page CSS ──────────────────────────────────────────────
-st.markdown(clean_html("""
+st.html(clean_html("""
 <style>
 /* Full-page hero gradient background */
 [data-testid="stAppViewContainer"] {
@@ -90,11 +90,11 @@ label { color: var(--text-secondary) !important; font-size: 0.85rem !important; 
 /* Remove red borders from required inputs */
 .stTextInput > div > div > input { border-color: var(--border) !important; }
 </style>
-"""), unsafe_allow_html=True)
+"""))
 
 
 # ── Centered Branding & Features ─────────────────────────────────────────────
-st.markdown(clean_html("""
+st.html(clean_html("""
     <div class="login-header-container">
         <!-- Logo pill -->
         <div style="
@@ -160,18 +160,18 @@ st.markdown(clean_html("""
             </div>
         </div>
     </div>
-"""), unsafe_allow_html=True)
+"""))
 
 
 # ── Auth Form Card ───────────────────────────────────────────────────────────
 # Header above the card
-st.markdown(clean_html("""
+st.html(clean_html("""
     <div style="text-align:center;margin-bottom:1.5rem;width:100%;">
-        <div style="margin-bottom:0.4rem;"><span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--primary);">lock</span></div>
-        <div style="color:var(--text-primary);font-size:1.35rem;font-weight:700;">Welcome back</div>
-        <div style="color:var(--text-muted);font-size:0.88rem;margin-top:0.2rem;">Sign in to continue your prep journey</div>
-    </div>
-"""), unsafe_allow_html=True)
+         <div style="margin-bottom:0.4rem;"><span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--primary);">lock</span></div>
+         <div style="color:var(--text-primary);font-size:1.35rem;font-weight:700;">Welcome back</div>
+         <div style="color:var(--text-muted);font-size:0.88rem;margin-top:0.2rem;">Sign in to continue your prep journey</div>
+     </div>
+"""))
 
 # Tabs (styled directly as the card using CSS .stTabs rule)
 tab_login, tab_signup, tab_reset = st.tabs(["Login", "Sign Up", "Reset"])
@@ -271,8 +271,8 @@ with tab_reset:
                 st.error(msg)
 
 # Footer note below the card
-st.markdown(clean_html("""
+st.html(clean_html("""
     <div style="text-align:center;margin-top:1.5rem;color:var(--text-muted);font-size:0.75rem;width:100%;">
         By signing up you agree to our Terms of Service &amp; Privacy Policy
     </div>
-"""), unsafe_allow_html=True)
+"""))

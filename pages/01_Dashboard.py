@@ -14,7 +14,7 @@ from src.database.supabase_client import (
 )
 from src.components.ui_components import (
     inject_global_css, page_header, kpi_card, score_ring,
-    render_sidebar_nav, render_ai_provider_selector, empty_state, glass_card
+    render_sidebar_nav, render_ai_provider_selector, empty_state, glass_card, mi
 )
 from src.components.charts import (
     radar_chart, performance_line_chart, pie_chart, readiness_gauge, weekly_progress_chart
@@ -70,7 +70,7 @@ name = profile.get("full_name", "there") if profile else "there"
 greeting_hour = int(__import__("datetime").datetime.now().strftime("%H"))
 greeting = "Good morning" if greeting_hour < 12 else "Good afternoon" if greeting_hour < 17 else "Good evening"
 
-page_header(f"{greeting}, {name.split()[0]}! 👋", "Here's your interview preparation overview", "dashboard")
+page_header(f"{greeting}, {name.split()[0]}! {mi('waving_hand', '2rem', '#fbbf24')}", "Here's your interview preparation overview", "dashboard")
 
 # Daily challenge banner
 today_challenge = db_select("daily_challenges", {"challenge_date": str(date.today())}, limit=1)
@@ -108,14 +108,14 @@ if today_challenge:
             </div>
             """, unsafe_allow_html=True)
         else:
-            if st.button("⚡ Attempt", key="daily_challenge_attempt", type="primary", use_container_width=True):
+            if st.button("Attempt", key="daily_challenge_attempt", type="primary", use_container_width=True, icon=":material/bolt:"):
                 st.session_state["daily_challenge"] = ch
                 st.session_state["show_challenge_modal"] = True
 
     # Inline attempt modal
     if not already_solved and st.session_state.get("show_challenge_modal") and st.session_state.get("daily_challenge"):
         ch_data = st.session_state["daily_challenge"]
-        with st.expander("✍️ Write your answer — Daily Challenge", expanded=True):
+        with st.expander("Write your answer — Daily Challenge", icon=":material/edit:", expanded=True):
             st.markdown(f"<p style='color:var(--text-primary);font-size:0.95rem;line-height:1.6;margin-bottom:1rem;'><b>Q:</b> {ch_data['question']}</p>", unsafe_allow_html=True)
             ch_answer = st.text_area(
                 "Your Answer",
@@ -125,10 +125,10 @@ if today_challenge:
             )
             cc1, cc2 = st.columns([3, 1])
             with cc1:
-                if st.button("📤 Submit Answer", key="submit_daily_challenge", type="primary"):
+                if st.button("Submit Answer", key="submit_daily_challenge", type="primary", icon=":material/send:"):
                     if ch_answer.strip():
                         from src.ai.gemini_client import evaluate_technical_answer
-                        with st.spinner("🤖 AI is evaluating your answer…"):
+                        with st.spinner("AI is evaluating your answer…"):
                             result = evaluate_technical_answer(
                                 question=ch_data["question"],
                                 answer=ch_answer,
@@ -156,7 +156,7 @@ if today_challenge:
                             """, unsafe_allow_html=True)
                             from src.database.supabase_client import award_xp
                             award_xp(user_id, max(5, int(score) // 10))
-                            st.success(f"🎉 +{max(5, int(score) // 10)} XP awarded!")
+                            st.success(f"+{max(5, int(score) // 10)} XP awarded!", icon=":material/celebration:")
                             st.session_state["show_challenge_modal"] = False
                             st.rerun()
                         else:
@@ -164,7 +164,7 @@ if today_challenge:
                     else:
                         st.warning("Please write an answer before submitting.")
             with cc2:
-                if st.button("✖ Close", key="close_daily_challenge"):
+                if st.button("Close", key="close_daily_challenge", icon=":material/close:"):
                     st.session_state["show_challenge_modal"] = False
                     st.rerun()
 
@@ -172,14 +172,14 @@ if today_challenge:
 # ─────────────────────────────────────────────
 # KPI Row
 # ─────────────────────────────────────────────
-st.markdown("### 📈 Quick Stats")
+st.html(f"<h3 style='margin:0 0 1rem;font-size:1.3rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;'>{mi('insights', '1.5rem', 'var(--primary)')} Quick Stats</h3>")
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 kpis = [
     (c1, "gps_fixed", "Interviews", str(total_interviews), "completed", "#6366f1"),
     (c2, "terminal", "Technical", f"{avg_technical:.0f}", "avg score", "#06b6d4"),
     (c3, "handshake", "HR Score", f"{avg_hr:.0f}", "avg score", "#8b5cf6"),
     (c4, "code", "Coding", f"{avg_coding:.0f}", "avg score", "#22c55e"),
-    (c5, "🗣️", "Communication", f"{avg_comm:.0f}", "avg score", "#f59e0b"),
+    (c5, "record_voice_over", "Communication", f"{avg_comm:.0f}", "avg score", "#f59e0b"),
     (c6, "lightbulb", "Problems", str(problems_solved), "solved", "#ef4444"),
 ]
 for col, icon, title, val, sub, color in kpis:
@@ -191,7 +191,7 @@ for col, icon, title, val, sub, color in kpis:
 # Score Rings + Readiness
 # ─────────────────────────────────────────────
 st.markdown("<div style='height:1.5rem'></div>", unsafe_allow_html=True)
-st.markdown("### 🎯 Performance Scores")
+st.html(f"<h3 style='margin:0 0 1rem;font-size:1.3rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;'>{mi('track_changes', '1.5rem', 'var(--primary)')} Performance Scores</h3>")
 cols = st.columns([2, 3])
 
 with cols[0]:
@@ -201,7 +201,7 @@ with cols[0]:
         <span style="
             background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);
             border-radius:99px;padding:0.4rem 1.2rem;font-size:0.9rem;color:#818cf8;font-weight:600;
-        ">{readiness_label(readiness)}</span>
+        ">{mi('check_circle' if readiness >= 85 else 'info' if readiness >= 70 else 'pending' if readiness >= 50 else 'warning', '1.1rem', '#818cf8')} &nbsp;{readiness_label(readiness)}</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -219,14 +219,14 @@ with cols[1]:
 # ─────────────────────────────────────────────
 # Charts Row
 # ─────────────────────────────────────────────
-st.markdown("### 📉 Performance Trends")
+st.html(f"<h3 style='margin:1.5rem 0 1rem;font-size:1.3rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;'>{mi('trending_up', '1.5rem', 'var(--primary)')} Performance Trends</h3>")
 ch1, ch2 = st.columns(2)
 
 with ch1:
     if performance:
         st.plotly_chart(performance_line_chart(performance, "30-Day Score Trend"), use_container_width=True, config={"displayModeBar": False})
     else:
-        empty_state("📉", "No data yet", "Complete interviews to see your trend.")
+        empty_state("trending_down", "No data yet", "Complete interviews to see your trend.")
 
 with ch2:
     if interviews:
@@ -236,7 +236,7 @@ with ch2:
             type_counts[t] = type_counts.get(t, 0) + 1
         st.plotly_chart(pie_chart(list(type_counts.keys()), list(type_counts.values()), "Interview Type Distribution"), use_container_width=True, config={"displayModeBar": False})
     else:
-        empty_state("🥧", "No interviews yet", "Start a mock interview to see distribution.")
+        empty_state("donut_large", "No interviews yet", "Start a mock interview to see distribution.")
 
 
 # Skill radar
@@ -327,17 +327,30 @@ with right:
                 st.markdown(f'<div style="color:var(--text-secondary);font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">📌 {q}...</div>', unsafe_allow_html=True)
 
 
-# ─────────────────────────────────────────────
-# Achievements
-# ─────────────────────────────────────────────
-st.markdown("### 🏅 Achievements")
+st.html(f"<h3 style='margin:1.5rem 0 1rem;font-size:1.3rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;'>{mi('emoji_events', '1.5rem', 'var(--primary)')} Achievements</h3>")
 if achievements:
     ach_details = db_select("achievements", {})
-    ach_map = {a["id"]: a for a in ach_details}
     earned_ids = {ua["achievement_id"] for ua in achievements}
     cols_ach = st.columns(6)
+    EMOJI_TO_MATERIAL = {
+        "🎯": "target",
+        "⭐": "star",
+        "🏆": "emoji_events",
+        "💻": "terminal",
+        "🔥": "local_fire_department",
+        "⚡": "bolt",
+        "🌟": "grade",
+        "📄": "description",
+        "💯": "percent",
+        "🧠": "psychology",
+        "🏢": "business",
+        "🎙️": "mic",
+        "🎙": "mic",
+    }
     for i, a in enumerate(ach_details[:12]):
         earned = a["id"] in earned_ids
+        icon_emoji = a.get('icon', 'emoji_events')
+        icon_name = EMOJI_TO_MATERIAL.get(icon_emoji, "emoji_events")
         with cols_ach[i % 6]:
             st.markdown(f"""
             <div style="
@@ -347,7 +360,7 @@ if achievements:
                 border-radius:12px;margin-bottom:0.5rem;
                 opacity:{'1' if earned else '0.4'};
             ">
-                <div style="font-size:1.6rem;">{a.get('icon','emoji_events')}</div>
+                <div style="font-size:1.6rem;color:{'var(--primary)' if earned else 'var(--text-muted)'};">{mi(icon_name, '1.6rem')}</div>
                 <div style="color:{'#818cf8' if earned else '#64748b'};font-size:0.7rem;font-weight:600;margin-top:0.2rem;">{a['name']}</div>
                 <div style="color:#6366f1;font-size:0.65rem;">+{a['xp_reward']} XP</div>
             </div>

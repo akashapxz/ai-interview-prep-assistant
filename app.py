@@ -32,7 +32,7 @@ st.set_page_config(
 inject_global_css()
 
 # Custom premium sidebar styles
-st.markdown("""
+st.html("""
 <style>
     /* Hide native Streamlit Navigation */
     [data-testid="stSidebarNav"] {
@@ -71,7 +71,7 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25) !important;
     }
 </style>
-""", unsafe_allow_html=True)
+""")
 
 
 

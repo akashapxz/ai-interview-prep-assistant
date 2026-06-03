@@ -11,7 +11,7 @@ from datetime import date
 from src.auth.supabase_auth import is_authenticated, get_current_user, get_current_profile, sign_out
 from src.components.ui_components import (
     inject_global_css, page_header, badge, kpi_card,
-    render_sidebar_nav, render_ai_provider_selector, empty_state
+    render_sidebar_nav, render_ai_provider_selector, empty_state, mi
 )
 from src.components.charts import leaderboard_chart
 from src.database.supabase_client import db_select, db_insert, get_supabase_client, award_xp
@@ -152,9 +152,16 @@ if profiles_list:
 
     # Rank table
     st.markdown("#### Rankings Table")
-    medals = ["🥇", "🥈", "🥉"]
     for i, p in enumerate(profiles_list, 1):
-        medal = medals[i - 1] if i <= 3 else f"#{i}"
+        if i == 1:
+            rank_html = f'<div style="background:#fbbf24;color:#1e1e2f;border-radius:50%;width:1.8rem;height:1.8rem;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;">{i}</div>'
+        elif i == 2:
+            rank_html = f'<div style="background:#94a3b8;color:#1e1e2f;border-radius:50%;width:1.8rem;height:1.8rem;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;">{i}</div>'
+        elif i == 3:
+            rank_html = f'<div style="background:#b45309;color:#fff;border-radius:50%;width:1.8rem;height:1.8rem;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;">{i}</div>'
+        else:
+            rank_html = f'<div style="border:1px solid var(--border);color:var(--text-secondary);border-radius:50%;width:1.8rem;height:1.8rem;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:600;">{i}</div>'
+            
         is_me = p["id"] == user_id
         bg    = "rgba(99,102,241,0.12)" if is_me else "rgba(255,255,255,0.03)"
         border= "rgba(99,102,241,0.4)"  if is_me else "rgba(255,255,255,0.06)"
@@ -163,13 +170,13 @@ if profiles_list:
              padding:0.65rem 1rem;margin-bottom:0.35rem;
              display:flex;justify-content:space-between;align-items:center;">
             <div style="display:flex;align-items:center;gap:0.75rem;">
-                <span style="font-size:1.2rem;width:2rem;text-align:center;">{medal}</span>
+                <span style="width:2rem;text-align:center;display:inline-flex;justify-content:center;">{rank_html}</span>
                 <span style="color:var(--text-primary);font-weight:{'700' if is_me else '500'};">
                     {p.get('full_name','Anonymous')}
                     {'&nbsp;<span style="color:#818cf8;font-size:0.75rem;">(You)</span>' if is_me else ''}
                 </span>
             </div>
-            <span style="color:#6366f1;font-weight:700;">⚡ {p.get('xp_points',0):,} XP</span>
+            <span style="color:#6366f1;font-weight:700;display:inline-flex;align-items:center;gap:0.25rem;">{mi('bolt', '1.1rem')} {p.get('xp_points',0):,} XP</span>
         </div>
         """, unsafe_allow_html=True)
 else:
@@ -182,6 +189,22 @@ else:
 st.markdown("---")
 st.markdown("### 🎖️ Achievement Badges")
 
+EMOJI_TO_MATERIAL = {
+    "🎯": "target",
+    "⭐": "star",
+    "🏆": "emoji_events",
+    "💻": "terminal",
+    "🔥": "local_fire_department",
+    "⚡": "bolt",
+    "🌟": "grade",
+    "📄": "description",
+    "💯": "percent",
+    "🧠": "psychology",
+    "🏢": "business",
+    "🎙️": "mic",
+    "🎙": "mic",
+}
+
 all_achievements = db_select("achievements")
 user_achievements = {
     ua["achievement_id"]
@@ -193,16 +216,18 @@ if all_achievements:
     for i, ach in enumerate(all_achievements):
         earned = ach["id"] in user_achievements
         opacity = "1" if earned else "0.35"
+        icon_emoji = ach.get('icon', 'emoji_events')
+        icon_name = EMOJI_TO_MATERIAL.get(icon_emoji, "emoji_events")
         with cols[i % 4]:
             st.markdown(f"""
             <div style="background:var(--bg-card);border:1px solid {'rgba(99,102,241,0.4)' if earned else 'rgba(255,255,255,0.06)'};
                  border-radius:14px;padding:1rem;text-align:center;opacity:{opacity};
                  transition:all 0.3s ease;margin-bottom:0.75rem;">
-                <div style="font-size:2rem;margin-bottom:0.4rem;">{ach.get('icon','emoji_events')}</div>
+                <div style="font-size:2rem;margin-bottom:0.4rem;color:{'var(--primary)' if earned else 'var(--text-muted)'};">{mi(icon_name, '2rem')}</div>
                 <div style="color:var(--text-primary);font-weight:700;font-size:0.85rem;margin-bottom:0.3rem;">{ach['name']}</div>
                 <div style="color:var(--text-muted);font-size:0.75rem;line-height:1.4;">{ach['description']}</div>
-                <div style="color:#6366f1;font-size:0.75rem;font-weight:700;margin-top:0.5rem;">
-                    {'✅ Earned' if earned else f'⚡ {ach.get("xp_reward",50)} XP'}
+                <div style="color:#6366f1;font-size:0.75rem;font-weight:700;margin-top:0.5rem;display:inline-flex;align-items:center;gap:0.25rem;justify-content:center;width:100%;">
+                    {'✅ Earned' if earned else f'{mi("bolt", "0.95rem")} {ach.get("xp_reward",50)} XP'}
                 </div>
             </div>
             """, unsafe_allow_html=True)

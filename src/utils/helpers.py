@@ -30,11 +30,11 @@ def score_to_color(score: float) -> str:
 
 
 def score_to_emoji(score: float) -> str:
-    if score >= 90: return "🏆"
-    if score >= 75: return "⭐"
-    if score >= 60: return "👍"
-    if score >= 40: return "📈"
-    return "💪"
+    if score >= 90: return "emoji_events"
+    if score >= 75: return "grade"
+    if score >= 60: return "thumb_up"
+    if score >= 40: return "trending_up"
+    return "fitness_center"
 
 
 def calculate_xp_for_interview(score: float, interview_type: str) -> int:
@@ -128,10 +128,10 @@ def calculate_streak(activity_dates: List[str]) -> int:
 
 
 def readiness_label(score: int) -> str:
-    if score >= 85: return "🟢 Interview Ready"
-    if score >= 70: return "🟡 Almost Ready"
-    if score >= 50: return "🟠 Needs Practice"
-    return "🔴 Needs Intensive Prep"
+    if score >= 85: return "Interview Ready"
+    if score >= 70: return "Almost Ready"
+    if score >= 50: return "Needs Practice"
+    return "Needs Intensive Prep"
 
 
 SKILL_DOMAINS = [

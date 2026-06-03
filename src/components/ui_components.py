@@ -26,100 +26,72 @@ def mi(name: str, size: str = "1.25rem", color: str = "") -> str:
 # ─────────────────────────────────────────────
 
 def inject_global_css():
-    st.markdown("""
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    st.html("""
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <style>
-    /* ── Google Font ── */
+    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-
-    /* ── Root variables (dark mode defaults) ── */
     :root {
-        --primary: #6366f1;
-        --primary-dark: #4f46e5;
-        --primary-light: #818cf8;
+        --primary: var(--primary-color, #6366f1);
+        --primary-dark: var(--primary-color, #4f46e5);
+        --primary-light: var(--primary-color, #818cf8);
         --secondary: #8b5cf6;
         --accent: #06b6d4;
         --accent2: #a78bfa;
-        --bg-base: #0a0a0f;
-        --bg-card: rgba(255,255,255,0.04);
-        --bg-card-hover: rgba(255,255,255,0.08);
+        
+        /* Theme adaptive colors using color-mix and Streamlit variables */
+        --bg-base: var(--background-color, #0a0a0f);
+        --bg-card: var(--secondary-background-color, rgba(255,255,255,0.04));
+        --bg-card-hover: color-mix(in srgb, var(--text-color, #ffffff) 4%, var(--secondary-background-color, rgba(255,255,255,0.04)));
         --bg-glass: rgba(99,102,241,0.08);
-        --border: rgba(255,255,255,0.08);
+        --border: color-mix(in srgb, var(--text-color, #ffffff) 8%, transparent);
         --border-accent: rgba(99,102,241,0.4);
-        --text-primary: #f1f5f9;
-        --text-secondary: #94a3b8;
-        --text-muted: #64748b;
-        --text-heading: #f1f5f9;
+        
+        --text-primary: var(--text-color, #f1f5f9);
+        --text-secondary: color-mix(in srgb, var(--text-color, #f1f5f9) 70%, transparent);
+        --text-muted: color-mix(in srgb, var(--text-color, #f1f5f9) 50%, transparent);
+        --text-heading: var(--text-color, #f1f5f9);
+        
         --success: #22c55e;
         --warning: #f59e0b;
         --danger: #ef4444;
         --radius: 16px;
         --radius-sm: 10px;
-        --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        --shadow: 0 8px 32px rgba(0,0,0,0.15);
         --shadow-accent: 0 0 30px rgba(99,102,241,0.2);
         --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-        --code-bg: rgba(0,0,0,0.4);
-        --sidebar-bg: rgba(10,10,20,0.95);
-        --divider: rgba(255,255,255,0.1);
-        --score-track: rgba(255,255,255,0.06);
+        --code-bg: color-mix(in srgb, var(--text-color, #ffffff) 5%, transparent);
+        --sidebar-bg: var(--secondary-background-color, rgba(10,10,20,0.95));
+        --divider: color-mix(in srgb, var(--text-color, #ffffff) 10%, transparent);
+        --score-track: color-mix(in srgb, var(--text-color, #ffffff) 6%, transparent);
     }
-
-    /* ── Light mode overrides ── */
-    html[data-theme="light"] {
-        --bg-base: #ffffff;
-        --bg-card: rgba(0,0,0,0.03);
-        --bg-card-hover: rgba(0,0,0,0.06);
-        --bg-glass: rgba(99,102,241,0.06);
-        --border: rgba(0,0,0,0.1);
-        --text-primary: #1e293b;
-        --text-secondary: #475569;
-        --text-muted: #94a3b8;
-        --text-heading: #0f172a;
-        --shadow: 0 8px 32px rgba(0,0,0,0.08);
-        --code-bg: rgba(0,0,0,0.06);
-        --sidebar-bg: rgba(248,250,252,0.98);
-        --divider: rgba(0,0,0,0.08);
-        --score-track: rgba(0,0,0,0.06);
-    }
-
-    /* ── Global reset ── */
     * { box-sizing: border-box; }
     html, body, [data-testid="stAppViewContainer"] {
+        background: var(--bg-base) !important;
         font-family: 'Inter', sans-serif !important;
         color: var(--text-primary) !important;
     }
-
-    /* ── Material Symbols base style ── */
     .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined' !important;
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
-
-    /* ── Hide Streamlit chrome ── */
     #MainMenu, footer, header { visibility: hidden; }
     [data-testid="stToolbar"] { display: none; }
     [data-testid="stDecoration"] { display: none; }
     .viewerBadge_container__1QSob { display: none !important; }
-
-    /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 99px; }
-
-    /* ── Sidebar ── */
     [data-testid="stSidebar"] {
         background: var(--sidebar-bg) !important;
         border-right: 1px solid var(--border) !important;
         backdrop-filter: blur(20px);
     }
     [data-testid="stSidebar"] > div { padding-top: 1rem; }
-
-    /* ── Main content area ── */
     .main .block-container {
         padding: 1.5rem 2rem 3rem !important;
         max-width: 1280px;
     }
-
-    /* ── Buttons ── */
     .stButton > button {
         background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
         color: #fff !important;
@@ -138,16 +110,12 @@ def inject_global_css():
         filter: brightness(1.1) !important;
     }
     .stButton > button:active { transform: translateY(0) !important; }
-
-    /* ── Secondary buttons ── */
     .stButton > button[kind="secondary"] {
         background: var(--bg-card) !important;
         border: 1px solid var(--border) !important;
         color: var(--text-secondary) !important;
         box-shadow: none !important;
     }
-
-    /* ── Inputs ── */
     .stTextInput > div > div > input,
     .stTextArea > div > div > textarea,
     .stSelectbox > div > div > div,
@@ -164,8 +132,6 @@ def inject_global_css():
         border-color: var(--primary) !important;
         box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
     }
-
-    /* ── Tabs ── */
     .stTabs [data-baseweb="tab-list"] {
         background: var(--bg-card) !important;
         border-radius: var(--radius) !important;
@@ -183,23 +149,15 @@ def inject_global_css():
         background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
         color: #fff !important;
     }
-
-    /* ── Progress bars ── */
     .stProgress > div > div > div {
         background: linear-gradient(90deg, var(--primary), var(--accent)) !important;
         border-radius: 99px !important;
     }
-
-    /* ── Alerts ── */
     .stSuccess { border-left: 4px solid var(--success) !important; background: rgba(34,197,94,0.1) !important; }
     .stError   { border-left: 4px solid var(--danger)  !important; background: rgba(239,68,68,0.1)  !important; }
     .stWarning { border-left: 4px solid var(--warning) !important; background: rgba(245,158,11,0.1) !important; }
     .stInfo    { border-left: 4px solid var(--accent)  !important; background: rgba(6,182,212,0.1)  !important; }
-
-    /* ── Spinner ── */
     .stSpinner > div { border-top-color: var(--primary) !important; }
-
-    /* ── File uploader ── */
     [data-testid="stFileUploader"] > div {
         background: var(--bg-glass) !important;
         border: 2px dashed var(--border-accent) !important;
@@ -210,15 +168,11 @@ def inject_global_css():
         border-color: var(--primary) !important;
         background: rgba(99,102,241,0.1) !important;
     }
-
-    /* ── Code blocks ── */
     code, pre {
         font-family: 'JetBrains Mono', monospace !important;
         background: var(--code-bg) !important;
         border-radius: 8px !important;
     }
-
-    /* ── Metric cards ── */
     [data-testid="stMetric"] {
         background: var(--bg-card) !important;
         border: 1px solid var(--border) !important;
@@ -232,15 +186,11 @@ def inject_global_css():
     }
     [data-testid="stMetricValue"] { color: var(--primary-light) !important; font-weight: 700 !important; }
     [data-testid="stMetricDelta"] { font-size: 0.8rem !important; }
-
-    /* ── Expander ── */
     [data-testid="stExpander"] {
         background: var(--bg-card) !important;
         border: 1px solid var(--border) !important;
         border-radius: var(--radius) !important;
     }
-
-    /* ── Animations ── */
     @keyframes fadeInUp {
         from { opacity:0; transform:translateY(20px); }
         to   { opacity:1; transform:translateY(0); }
@@ -254,11 +204,9 @@ def inject_global_css():
         100% { background-position: 200% 0; }
     }
     @keyframes spin-slow { to { transform: rotate(360deg); } }
-
     .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
     .animate-pulse-glow { animation: pulse-glow 2s infinite; }
     </style>
-
     <script>
     (function(){
         function detectTheme(){
@@ -276,7 +224,7 @@ def inject_global_css():
         setTimeout(detectTheme, 1000);
     })();
     </script>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ─────────────────────────────────────────────
